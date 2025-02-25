@@ -1,0 +1,121 @@
+.aa-club-home-page{
+  background-image: url('./padura2.jpg');
+  background-size: cover;
+  background-position: center;
+  
+  color: white; /* Optional for better text visibility */
+  height: 100vh; /* Makes the div fill the full viewport height */
+  width:100%;
+  position: relative; 
+}
+
+
+  
+  /* If you want to set the background for the container as well */
+  .aa-club-container {
+    position: absolute;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    padding: 20px;
+    left: 300px;
+    margin-top: 180px;
+
+    
+ /* Set background to white for the container */
+    
+  }
+  
+  .aa-club-card {
+    width: calc(50% - 20px);
+    max-width: 350px;
+    height: 400px;
+    border-radius: 15px;
+    overflow: hidden;
+    position: relative;
+    color: #fff;
+    text-align: center;
+    background-size: cover;
+    background-position: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: background-image 0.5s ease-in-out;
+  }
+  
+  .aa-club-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 1;
+  }
+  
+  
+
+  .aa-club-header {
+    position: relative;
+    z-index: 2;
+    padding: 20px 0;
+    font-family: bold;
+    font-size: 20px;
+    color: #f8e71c; /* Bright yellow for high contrast */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7); /* Adds text shadow for better visibility */
+    opacity: 1; /* Ensure full opacity */
+  }
+  
+  .aa-club-logo {
+    position: relative;
+    width: 50px;
+    height: 50px;
+    margin-bottom: 10px;
+    border-radius: 50%;
+    left: 40%;
+  }
+  
+  .aa-club-name {
+    font-size: 1.5em;
+    margin: 0;
+  }
+  
+  hr {
+    border: 0;
+    height: 1px;
+    background: #fff;
+    opacity: 0.5;
+    margin: 10px 0;
+  }
+  
+  .aa-club-description {
+    font-size: 1em;
+    margin: 10px;
+    z-index: 2;
+    position: relative;
+    line-height: 1.5;
+    
+  }
+  
+  .aa-register-btn {
+    margin: 15px 0;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: #2461ee;
+    color: #fff;
+    font-size: 1em;
+    cursor: pointer;
+    z-index: 2;
+    position: relative;
+    top: 20px;
+    
+    
+    
+  }
+  
+  .aa-register-btn:hover {
+    background-color: #0dcfe1;
+  }
+
+  
