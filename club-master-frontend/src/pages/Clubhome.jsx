@@ -62,7 +62,7 @@ const ClubCard = ({ club }) => {
       <p className="aa-club-description mb-4">{club.clubVision}</p>
       <span className="club-key bg-dark text-white p-2 shadow">enrollment key : {club.clubId}</span>
       <div className="aa-club-actions mt-4">
-        <a href={`/rotractlogin`} className="aa-register-btn">Join Now</a>
+        <a href={`/rotractlogin?clubId=${club.clubId}`} className="aa-register-btn">Join Now</a>
       </div>
     </div>
   );
