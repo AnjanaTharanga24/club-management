@@ -27,6 +27,7 @@
     "react-router-dom": "^6.29.0",
     "react-simple-typewriter": "^5.0.1",
     "shadcn-ui": "^0.9.4",
+    "sweetalert2": "^11.17.2",
     "swiper": "^11.2.1",
     "vite-project": "file:"
   },
