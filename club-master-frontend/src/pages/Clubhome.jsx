@@ -2,86 +2,117 @@ import React, { useState, useEffect } from "react";
 import "./Clubhome.css";
 import Dashboard from "../components/Dashboard";
 import Sidebar from "../components/Sidebar";
+import Navbar from "../components/Navbar";
+import axios from "axios";
 
-const clubs = [
-  {
-    name: "LEO CLUB",
-    logo: "/leologo.png",
-    bgImages: ["/1.jpg", "/2.jpg", "/3.jpg"],
-    description: `Leo Clubs are youth organizations sponsored by Lions Clubs that empower young people to make a difference. 
-    Leos engage in various community service activities, develop leadership skills, and experience the joy of serving others.`,
-    logoStyle: { marginLeft: "10px", marginRight: "0", width: "60px", height: "50px" },
-    headerStyle: { marginLeft: "10px", marginRight: "0" },
-    link: "/leologin",
-  },
-  {
-    name: "ROTRACT CLUB",
-    logo: "/rotractlogo.png",
-    bgImages: ["/rotractback.jpg", "/aisecback.jpg", "/ledback.jpg"],
-    description: `Rotaract Club is a global organization of young professionals dedicated to community service, leadership development, and cultural exchange, fostering positive change through impactful projects and networking opportunities worldwide.`,
-    link: "/rotractlogin",
-  },
-  {
-    name: "ISACA CLUB",
-    logo: "/isaclogo.png",
-    bgImages: ["/4.jpg", "/5.jpg", "/6.jpg"],
-    description: `ISACA Club empowers students and professionals in IT governance, cybersecurity, and risk management through knowledge sharing, certifications, and networking. It fosters leadership and career growth in the ever-evolving field of technology.`,
-    logoStyle: { marginLeft: "10px" },
-    link: "/isacalogin",
-  },
-  
-];
+// Map club names to specific background images
+const clubBackgroundImages = {
+  // social: ["/social1.jpg", "/social2.jpg", "/social3.jpg"],
+  // pmat: ["/pmat1.jpg", "/pmat2.jpg", "/pmat3.jpg"],
+  // stat: ["/stat1.jpg", "/stat2.jpg", "/stat3.jpg"],
+  // anima: ["/anima1.jpg", "/anima2.jpg", "/anima3.jpg"],
+  // cloud: ["/cloud1.jpg", "/cloud2.jpg", "/cloud3.jpg"]
+};
+
+const defaultBgImages = ["/1.jpg", "/2.jpg", "/3.jpg"];
+
+const clubLogos = {
+  // social: "/leologo.png",
+  // pmat: "/rotractlogo.png",
+  // stat: "/isaclogo.png",
+  // anima: "/leologo.png",
+  // cloud: "/leologo.png",
+  default: "/leologo.png" 
+};
 
 const ClubCard = ({ club }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-
+  
+  const clubName = club.clubName.toLowerCase();
+  const bgImages = clubBackgroundImages[clubName] || defaultBgImages;
+  
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentImageIndex((prevIndex) => (prevIndex + 1) % club.bgImages.length);
+      setCurrentImageIndex((prevIndex) => (prevIndex + 1) % bgImages.length);
     }, 3000);
-
     return () => clearInterval(interval);
-  }, [club.bgImages.length]);
+  }, [bgImages.length]);
+
+  const logo = clubLogos[clubName] || clubLogos.default;
 
   return (
     <div
       className="aa-club-card"
       style={{
-        backgroundImage: `url(${club.bgImages[currentImageIndex]})`,
+        backgroundImage: `url(${bgImages[currentImageIndex]})`,
       }}
     >
       <div className="aa-club-header">
         <img
-          src={club.logo}
-          alt={`${club.name} Logo`}
+          src={logo}
+          alt={`${club.clubName} Logo`}
           className="aa-club-logo"
-          style={club.logoStyle} // Separate inline style for the logo
+          style={{ width: "60px", height: "50px", marginLeft: "10px" }}
         />
-        <h2 className="aa-club-name" style={club.headerStyle}> {/* Separate inline style for the header */}
-          {club.name}
+        <h2 className="aa-club-name" style={{ marginLeft: "10px" }}>
+          {club.clubName.toUpperCase()} CLUB
         </h2>
       </div>
       <hr />
-      <p className="aa-club-description">{club.description}</p>
-      <a href={club.link} className="aa-register-btn"> Join Now</a>
-    
-       
+      <p className="aa-club-description mb-4">{club.clubVision}</p>
+      <span className="club-key bg-dark text-white p-2 shadow">enrollment key : {club.clubId}</span>
+      <div className="aa-club-actions mt-4">
+        <a href={`/rotractlogin`} className="aa-register-btn">Join Now</a>
+      </div>
     </div>
   );
 };
 
 const Clubhome = () => {
+  const [clubs, setClubs] = useState([]);
+
+  const [copied, setCopied] = useState(false);
+
+  const copyToClipboard = () => {
+    navigator.clipboard.writeText(enrollmentKey);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  useEffect(() => {
+    getAllClubs();
+  }, []);
+
+  const getAllClubs = async () => {
+    try {
+      const response = await axios.get("http://localhost:7000/api/v1/club/all");
+      console.log('Clubs data:', response.data);
+
+      const filteredClubs = response.data.filter(club => 
+      
+        club.clubName.length > 1
+      );
+      
+      setClubs(filteredClubs);
+    } catch (error) {
+      console.error('Error while getting all clubs', error);
+    }
+  };
+
   return (
     <div className="aa-club-home-page">
+      <div>
+        <Navbar />
+      </div>
       <Sidebar />
       <div className="aa-club-content">
-      <Dashboard />
-      <div className="aa-club-container">
-        {clubs.map((club, index) => (
-          <ClubCard key={index} club={club} />
-        ))}
+        
+        <div className="aa-club-container " style={{marginTop:"40px"}}>
+          {clubs.map((club) => (
+            <ClubCard key={club.clubId} club={club} />
+          ))}
+        </div>
       </div>
-    </div>
     </div>
   );
 };

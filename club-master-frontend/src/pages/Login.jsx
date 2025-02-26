@@ -1,76 +1,77 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from "react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
-import './Login.css';
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import Swal from 'sweetalert2';
+import "./Login.css";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import Swal from "sweetalert2";
+import { UserContext } from "../common/UserContext";
 
 const Login = () => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const {setUser} = useContext(UserContext);
   const navigate = useNavigate();
 
   const handleLogin = async () => {
     try {
       const response = await axios.post("http://localhost:7000/api/v1/login", {
         username,
-        password
+        password,
       });
       console.log(response.data);
+      setUser(response.data);
       Swal.fire({
-        title: 'Welcome Back!',
-        text: 'Login successful',
-        icon: 'success',
+        title: "Welcome Back!",
+        text: "Login successful",
+        icon: "success",
         timer: 1500,
         showConfirmButton: false,
-        background: '#fff',
+        background: "#fff",
         customClass: {
-          popup: 'swal-popup'
-        }
+          popup: "swal-popup",
+        },
       }).then(() => {
-        navigate('/clubhome');
+        navigate("/");
       });
     } catch (error) {
-      console.log('error while login', error);
+      console.log("error while login", error);
       Swal.fire({
-        title: 'Login Failed',
-        text: error.response?.data || 'Something went wrong. Please try again.',
-        icon: 'error',
-        confirmButtonText: 'Try Again',
-        confirmButtonColor: '#d33',
-        background: '#fff',
+        title: "Login Failed",
+        text: error.response?.data || "Something went wrong. Please try again.",
+        icon: "error",
+        confirmButtonText: "Try Again",
+        confirmButtonColor: "#d33",
+        background: "#fff",
         customClass: {
-          title: 'swal-title',
-          popup: 'swal-popup'
-        }
+          title: "swal-title",
+          popup: "swal-popup",
+        },
       });
     }
-  }
-  
+  };
+
   return (
     <div>
       <Navbar />
       {/* Background Section */}
-      <div className="background-section">
+      <div className="background-section ">
         {/* Logo */}
-        <img
-          src="./ll.png"
-          alt="Logo"
-          className="logo"
-        />
+        <img src="/logo.png" alt="Logo" className="logo" style={{borderRadius:"100px",marginTop:"90px"}} />
 
         {/* Sign In Section */}
-        <div className="signin-section">
+        <div className="signin-section ">
           <h2 className="signin-heading"></h2>
 
           {/* Username Field */}
-          <div className="input-container username">
-            <label htmlFor="username" className="input-label">USERNAME</label>
-            <input 
-              type="text" 
+          <div className="input-container username" style={{marginTop:"110px"}} >
+            <label htmlFor="username" className="input-label">
+              USERNAME
+            </label>
+            <input
+              type="text"
               id="username"
-              placeholder="Enter your username" 
+              placeholder="Enter your username"
               className="input-box"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
@@ -79,11 +80,13 @@ const Login = () => {
 
           {/* Password Field */}
           <div className="input-container password">
-            <label htmlFor="password" className="input-label">PASSWORD</label>
-            <input 
-              type="password" 
+            <label htmlFor="password" className="input-label">
+              PASSWORD
+            </label>
+            <input
+              type="password"
               id="password"
-              placeholder="Enter your password" 
+              placeholder="Enter your password"
               className="input-box"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
@@ -94,15 +97,18 @@ const Login = () => {
           <p className="forgot-password">Forgot Password?</p>
 
           {/* Sign In Button */}
-          <button className="signin-button" onClick={handleLogin}>SIGN IN</button>
+          <button className="signin-button" onClick={handleLogin}>
+            SIGN IN
+          </button>
         </div>
 
         {/* Left Section for Text and Sign Up Button */}
         <div className="text-container">
           <h1>New Here?</h1>
           <p>
-            Sign up now to explore, manage, and stay updated with your favourite university clubs!
-          </p> 
+            Sign up now to explore, manage, and stay updated with your favourite
+            university clubs!
+          </p>
 
           {/* Sign Up Button with href */}
           <a href="/signup" className="signup-button">
