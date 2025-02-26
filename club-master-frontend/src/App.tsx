@@ -24,6 +24,7 @@ import Rotractabout  from './Rotractclub/Rotractabout';
 import Rotractevent  from './Rotractclub/Rotractevent';
 import Rotractnews  from './Rotractclub/Rotractnews';
 import Userprofile  from './pages/Userprofile';
+import { UserProvider } from "./common/UserContext";
 
 
 
@@ -34,7 +35,8 @@ import Userprofile  from './pages/Userprofile';
 function App() {
 
   return (
-    <BrowserRouter>
+    <UserProvider>
+         <BrowserRouter>
     <Routes>
       <Route path="/" element={<Home/>}/>
       <Route path="about" element={<About/>}/>
@@ -56,12 +58,11 @@ function App() {
       <Route path="rotractnews" element={<Rotractnews/>}/>
       <Route path="userprofile" element={<Userprofile/>}/>
       <Route path="rotractabout" element={<Rotractabout/>}/>
-      <Route path="newclub" element={<Newclub/>}/>
-      
-      
-      
+      <Route path="newclub" element={<Newclub/>}/> 
      </Routes>
     </BrowserRouter>
+    </UserProvider>
+   
   )
 }
 

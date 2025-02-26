@@ -1,5 +1,5 @@
 .aa-club-home-page{
-  background-image: url('./padura2.jpg');
+  /* background-image: url('./padura2.jpg'); */
   background-size: cover;
   background-position: center;
   
@@ -17,7 +17,7 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 20px;
+    gap: 80px;
     padding: 20px;
     left: 300px;
     margin-top: 180px;
@@ -118,4 +118,10 @@
     background-color: #0dcfe1;
   }
 
-  
+  .club-key{
+    position: relative;
+    font-size: 1.5em;
+    margin: 0;
+    z-index: 2;
+    border-radius: 10px;
+  }
