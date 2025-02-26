@@ -1,39 +1,81 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Info, Users, Shield, Sparkles } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import axios from 'axios';
 import Dashboard from "../components/Dashboard";
 import Sidebar from "../components/Sidebar";
+import { UserContext } from '../common/UserContext';
+import Swal from 'sweetalert2';
+import Navbar from '../components/Navbar';
+
 
 const ClubEnrollment = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [enrollmentKey, setEnrollmentKey] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+  const { user } = useContext(UserContext); 
 
-  const handleSubmit = async (e) => {
+  const clubId = searchParams.get('clubId');
+
+  const handleEnrollment = async (e) => {
     e.preventDefault();
-    setIsLoading(true);
-    setError('');
-    
     try {
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      if (enrollmentKey === '12345') {
-        
-        navigate('/rotract'); // Add navigation to Rotaract page
-      } else {
-        throw new Error('Invalid enrollment key');
+      if(enrollmentKey != clubId){
+        Swal.fire({
+          title: "Enrollment key is incorrect",
+          icon: "error",
+          confirmButtonText: "Try Again",
+          confirmButtonColor: "#d33",
+          background: "#fff",
+          customClass: {
+            title: "swal-title",
+            popup: "swal-popup",
+          },
+        });
+        return;
+
       }
-    } catch (err) {
-      setError('Invalid enrollment key. Please try again.');
-    } finally {
-      setIsLoading(false);
-    }
+      const response = await axios.post(
+        `http://localhost:7000/api/v1/club/${user.id}/enroll-member/${clubId}`,
+        { enrollmentKey: enrollmentKey }
+      );
+      console.log(response.data);
+       Swal.fire({
+              title: "Welcome to the Club!",
+              text: "Enrollment successful",
+              icon: "success",
+              timer: 1500,
+              showConfirmButton: false,
+              background: "#fff",
+              customClass: {
+                popup: "swal-popup",
+              },
+            }).then(() => {
+              navigate(`/rotract/?clubId=${clubId}`);
+            });
+
+    } catch (error) {
+      console.log("Error while enrolling:", error);
+      Swal.fire({
+              title: "Already enrolled",
+              icon: "error",
+              confirmButtonText: "Try Again",
+              confirmButtonColor: "#d33",
+              background: "#fff",
+              customClass: {
+                title: "swal-title",
+                popup: "swal-popup",
+              },
+            });
+    } 
   };
 
   return (
     <div>
       <Sidebar />
-      <Dashboard />
+      <Navbar/>
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-900 via-purple-800 to-blue-600 ml-48">
         <div className="flex w-full max-w-4xl mx-8 gap-8 mt-12">
           {/* Left side - Enrollment Form */}
@@ -48,7 +90,7 @@ const ClubEnrollment = () => {
                 </p>
               </div>
 
-              <form onSubmit={handleSubmit} className="space-y-6">
+              <form onSubmit={handleEnrollment} className="space-y-6">
                 <div>
                   <div className="relative">
                     <input
