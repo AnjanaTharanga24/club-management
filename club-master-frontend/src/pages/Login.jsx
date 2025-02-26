@@ -1,9 +1,52 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
-import './Login.css'; // Adjusted import path
+import './Login.css';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import Swal from 'sweetalert2';
 
 const Login = () => {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const navigate = useNavigate();
+
+  const handleLogin = async () => {
+    try {
+      const response = await axios.post("http://localhost:7000/api/v1/login", {
+        username,
+        password
+      });
+      console.log(response.data);
+      Swal.fire({
+        title: 'Welcome Back!',
+        text: 'Login successful',
+        icon: 'success',
+        timer: 1500,
+        showConfirmButton: false,
+        background: '#fff',
+        customClass: {
+          popup: 'swal-popup'
+        }
+      }).then(() => {
+        navigate('/clubhome');
+      });
+    } catch (error) {
+      console.log('error while login', error);
+      Swal.fire({
+        title: 'Login Failed',
+        text: error.response?.data || 'Something went wrong. Please try again.',
+        icon: 'error',
+        confirmButtonText: 'Try Again',
+        confirmButtonColor: '#d33',
+        background: '#fff',
+        customClass: {
+          title: 'swal-title',
+          popup: 'swal-popup'
+        }
+      });
+    }
+  }
   
   return (
     <div>
@@ -29,6 +72,8 @@ const Login = () => {
               id="username"
               placeholder="Enter your username" 
               className="input-box"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
             />
           </div>
 
@@ -40,6 +85,8 @@ const Login = () => {
               id="password"
               placeholder="Enter your password" 
               className="input-box"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
             />
           </div>
 
@@ -47,9 +94,7 @@ const Login = () => {
           <p className="forgot-password">Forgot Password?</p>
 
           {/* Sign In Button */}
-          <a href="/clubhome">
-           <button className="signin-button">SIGN IN</button>
-         </a>
+          <button className="signin-button" onClick={handleLogin}>SIGN IN</button>
         </div>
 
         {/* Left Section for Text and Sign Up Button */}
@@ -61,7 +106,6 @@ const Login = () => {
 
           {/* Sign Up Button with href */}
           <a href="/signup" className="signup-button">
-          
             SIGN UP
           </a>
         </div>
