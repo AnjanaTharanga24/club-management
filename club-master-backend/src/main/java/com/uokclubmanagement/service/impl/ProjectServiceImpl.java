@@ -24,8 +24,6 @@ public class ProjectServiceImpl implements ProjectService {
     @Autowired
     private ProjectRepository projectRepository;
     @Autowired
-    private EventServiceImpl eventServiceImpl;
-    @Autowired
     private SequenceGeneratorService sequenceGeneratorService;
     @Autowired
     private ClubAdminRepository clubAdminRepository;
