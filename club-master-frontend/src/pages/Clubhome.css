@@ -1,31 +1,29 @@
-.aa-club-home-page{
-  background-image: url('./padura2.jpg');
+.aa-club-home-page {
   background-size: cover;
   background-position: center;
-  
-  color: white; /* Optional for better text visibility */
-  height: 100vh; /* Makes the div fill the full viewport height */
-  width:100%;
-  position: relative; 
+  color: white;
+  height: 100vh;
+  width: 100%;
+  position: relative;
 }
 
+.aa-club-content {
+  margin-left: 200px;
+  margin-top: 70px; 
+  padding: 20px;
+  overflow-y: auto; 
+  height: calc(100vh - 70px); 
+}
 
   
-  /* If you want to set the background for the container as well */
-  .aa-club-container {
-    position: absolute;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 20px;
-    padding: 20px;
-    left: 300px;
-    margin-top: 180px;
-
-    
- /* Set background to white for the container */
-    
-  }
+.aa-club-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 80px;
+  padding: 20px;
+  margin-top: 0; 
+}
   
   .aa-club-card {
     width: calc(50% - 20px);
@@ -61,9 +59,9 @@
     padding: 20px 0;
     font-family: bold;
     font-size: 20px;
-    color: #f8e71c; /* Bright yellow for high contrast */
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7); /* Adds text shadow for better visibility */
-    opacity: 1; /* Ensure full opacity */
+    color: #f8e71c; 
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7); 
+    opacity: 1; 
   }
   
   .aa-club-logo {
@@ -118,4 +116,10 @@
     background-color: #0dcfe1;
   }
 
-  
+  .club-key{
+    position: relative;
+    font-size: 1.5em;
+    margin: 0;
+    z-index: 2;
+    border-radius: 10px;
+  }
