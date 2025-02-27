@@ -3,6 +3,8 @@ import "./Rotract.css";
 import { Typewriter } from "react-simple-typewriter";
 import Rotractnav from "../components/Rotractnav";
 import Rotractfooter from "../components/Rotractfooter";
+import axios from "axios";
+import { useSearchParams } from "react-router-dom";
 
 const Rotract = () => {
   const images = ["/r100.jpg", "/r101.jpg", "/r102.jpg", "/r103.jpg"];
@@ -11,6 +13,27 @@ const Rotract = () => {
   const [alternateImage, setAlternateImage] = useState("revent2.jpg");
   const [isImpactVisible, setIsImpactVisible] = useState(false);
   const [counts, setCounts] = useState({ members: 0, projects: 0, awards: 0 });
+
+  const [searchParams] = useSearchParams();
+  const clubId = searchParams.get('clubId');
+  const [club, setClub] = useState({});
+
+  useEffect(() => {
+    if (clubId) {
+      getClub();
+    }
+  }, [clubId]);
+
+  const getClub = async () =>{
+    try {
+      const response = await axios.get(`http://localhost:7000/api/v1/club/findClub/${clubId}`);
+      console.log(response.data);
+      setClub(response.data);
+    } catch (error) {
+      console.log('Error while getting club', error);
+    }
+
+  }
 
   useEffect(() => {
     // Image carousel effect
@@ -231,10 +254,8 @@ const Rotract = () => {
       >
         <div className="text-overlay">
           <h1>
-            Join the global movement of young leaders who are
-            <br />
-            developing innovative solutions to the world’s most
-            <br />
+            {club.clubVision}
+            
             <div className="typewriter-text2">
               <Typewriter
                 words={["urgent problems.", "critical issues.", "global crises."]}
@@ -253,14 +274,14 @@ const Rotract = () => {
       {/* Interface Below the Background */}
       <div className="interface-container">
         <header className="interface-header animate-on-scroll">
-          <h1>Welcome to Rotaract Club of University of Kelaniya</h1>
+          <h1>Welcome to {club.clubName} Club of University of Kelaniya</h1>
           <p>Making a Positive Impact on the Society since 2010</p>
         </header>
 
         <div className="interface-content">
           <div className="intro animate-on-scroll">
             <p>
-            Rotaract is a club for young people focused on community service, leadership development, and networking. It is part of Rotary International and aims to create positive change through various local and international projects.
+            {club.clubName} is a club for young people focused on community service, leadership development, and networking. It is part of Rotary International and aims to create positive change through various local and international projects.
             </p>
           </div>
 

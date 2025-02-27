@@ -88,6 +88,9 @@ const ClubEnrollment = () => {
                 <p className="text-gray-200 text-lg font-light">
                   Enter your enrollment key to access exclusive club features
                 </p>
+                <p className="text-gray-100 text-lg font-light mt-3" style={{fontWeight: 'bold'}}>
+                 Enrollment key : {clubId}
+                </p>
               </div>
 
               <form onSubmit={handleEnrollment} className="space-y-6">

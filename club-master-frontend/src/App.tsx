@@ -25,6 +25,7 @@ import Rotractevent  from './Rotractclub/Rotractevent';
 import Rotractnews  from './Rotractclub/Rotractnews';
 import Userprofile  from './pages/Userprofile';
 import { UserProvider } from "./common/UserContext";
+import ViewMyClubs from "./pages/ViewMyClubs";
 
 
 
@@ -59,6 +60,7 @@ function App() {
       <Route path="userprofile" element={<Userprofile/>}/>
       <Route path="rotractabout" element={<Rotractabout/>}/>
       <Route path="newclub" element={<Newclub/>}/> 
+      <Route path="myclub" element={<ViewMyClubs/>}/>
      </Routes>
     </BrowserRouter>
     </UserProvider>
