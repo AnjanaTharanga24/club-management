@@ -4,6 +4,8 @@ import Dashboard from "../components/Dashboard";
 import Sidebar from "../components/Sidebar";
 import Navbar from "../components/Navbar";
 import axios from "axios";
+import { Link } from "react-router-dom";
+import { FaUsers } from "react-icons/fa";
 
 // Map club names to specific background images
 const clubBackgroundImages = {
@@ -60,7 +62,7 @@ const ClubCard = ({ club }) => {
       </div>
       <hr />
       <p className="aa-club-description mb-4">{club.clubVision}</p>
-      <span className="club-key bg-dark text-white p-2 shadow">enrollment key : {club.clubId}</span>
+      
       <div className="aa-club-actions mt-4">
         <a href={`/rotractlogin?clubId=${club.clubId}`} className="aa-register-btn">Join Now</a>
       </div>
@@ -70,14 +72,6 @@ const ClubCard = ({ club }) => {
 
 const Clubhome = () => {
   const [clubs, setClubs] = useState([]);
-
-  const [copied, setCopied] = useState(false);
-
-  const copyToClipboard = () => {
-    navigator.clipboard.writeText(enrollmentKey);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
 
   useEffect(() => {
     getAllClubs();
@@ -89,7 +83,6 @@ const Clubhome = () => {
       console.log('Clubs data:', response.data);
 
       const filteredClubs = response.data.filter(club => 
-      
         club.clubName.length > 1
       );
       
@@ -101,13 +94,10 @@ const Clubhome = () => {
 
   return (
     <div className="aa-club-home-page">
-      <div>
-        <Navbar />
-      </div>
+      <Navbar />
       <Sidebar />
       <div className="aa-club-content">
-        
-        <div className="aa-club-container " style={{marginTop:"40px"}}>
+        <div className="aa-club-container">
           {clubs.map((club) => (
             <ClubCard key={club.clubId} club={club} />
           ))}
