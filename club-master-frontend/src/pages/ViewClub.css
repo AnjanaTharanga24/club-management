@@ -20,6 +20,7 @@
     --warning-gradient: linear-gradient(135deg, #d97706 0%, #f59e0b 100%);
     --danger-gradient: linear-gradient(135deg, #dc2626 0%, #ef4444 100%);
     --purple-gradient: linear-gradient(135deg, #7c3aed 0%, #8b5cf6 100%);
+    --dark-blue-gradient: linear-gradient(to right, #0A1931, #001F3F);
     
     --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
     --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
