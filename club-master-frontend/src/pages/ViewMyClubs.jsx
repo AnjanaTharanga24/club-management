@@ -4,12 +4,14 @@ import Sidebar from "../components/Sidebar";
 import axios from 'axios';
 import { UserContext } from '../common/UserContext';
 import '../pages/ViewClub.css';
+import { useNavigate } from 'react-router-dom';
 
 export default function ViewMyClubs() {
   const [clubs, setClubs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const { user } = useContext(UserContext);
+  const navigate = useNavigate();
 
   useEffect(() => {
     console.log('User:', user);
@@ -37,14 +39,13 @@ export default function ViewMyClubs() {
     }
   };
 
+  const viewClub = (clubId) => {
+    navigate(`/rotract/?clubId=${clubId}`);
+  };
+
   const getClubColor = (name) => {
     const colors = [
-      'var(--primary-gradient)',
-      'var(--success-gradient)',
-      'var(--info-gradient)',
-      'var(--warning-gradient)',
-      'var(--danger-gradient)',
-      'var(--purple-gradient)'
+      'var(--dark-blue-gradient)' 
     ];
     
     let hash = 0;
@@ -105,7 +106,7 @@ export default function ViewMyClubs() {
                   <div className="club-id">ID: {club.id}</div>
                 </div>
                 <div className="club-actions">
-                  <button className="club-action-btn">
+                  <button className="club-action-btn" onClick={() => viewClub(club.id)}>
                     <span>View Club</span>
                     <i className="bi bi-arrow-right"></i>
                   </button>
@@ -113,19 +114,7 @@ export default function ViewMyClubs() {
               </div>
             ))}
           </div>
-        ) : (
-          <div className="empty-clubs">
-            <div className="empty-illustration">
-              <i className="bi bi-people"></i>
-            </div>
-            <h2>No Clubs Yet</h2>
-            <p>Start by creating your first club or join existing ones</p>
-            <button className="create-first-btn">
-              <i className="bi bi-plus-circle"></i>
-              Create Your First Club
-            </button>
-          </div>
-        )}
+        ) : null}
       </div>
     </div>
   );
