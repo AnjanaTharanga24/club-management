@@ -1,7 +1,6 @@
 package com.uokclubmanagement.controller;
 
 import com.uokclubmanagement.entity.Award;
-import com.uokclubmanagement.entity.Club;
 import com.uokclubmanagement.service.AwardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

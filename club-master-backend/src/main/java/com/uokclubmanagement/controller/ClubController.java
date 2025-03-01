@@ -12,7 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/club")
-@CrossOrigin(origins = "http://localhost:5174")
+@CrossOrigin(origins = "http://localhost:5173")
 public class ClubController {
 
     @Autowired
@@ -54,7 +54,7 @@ public class ClubController {
     }
 
     @GetMapping("/{memberId}/getClubs")
-    public HashMap<String, String> getClubsByMemberId(@PathVariable String memberId) {
+    public List<Club> getClubsByMemberId(@PathVariable String memberId) {
         return clubService.getClubsByMemberId(memberId);
     }
 }
