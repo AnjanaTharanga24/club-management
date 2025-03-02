@@ -10,6 +10,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/comment")
+@CrossOrigin(origins = "http://localhost:5173")
 public class CommentController {
 
     @Autowired
