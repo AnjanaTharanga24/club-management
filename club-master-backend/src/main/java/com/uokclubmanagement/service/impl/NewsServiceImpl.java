@@ -184,5 +184,4 @@ public class NewsServiceImpl implements NewsService {
             throw new RuntimeException("Invalid Member ID: "+memberId);
         }
     }
-
 }
