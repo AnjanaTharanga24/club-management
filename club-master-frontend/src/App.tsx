@@ -61,6 +61,7 @@ function App() {
       <Route path="rotractabout" element={<Rotractabout/>}/>
       <Route path="newclub" element={<Newclub/>}/> 
       <Route path="myclub" element={<ViewMyClubs/>}/>
+      {/* <Route path="myclub" element={<MyClub/>}/> */}
      </Routes>
     </BrowserRouter>
     </UserProvider>

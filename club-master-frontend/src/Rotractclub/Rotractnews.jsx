@@ -1,40 +1,31 @@
-import React, { useState } from 'react';
-import { Heart, ThumbsDown } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import { Heart, ThumbsDown, ThumbsUp } from 'lucide-react';
 import Rotractnav from "../components/Rotractnav";
 import Rotractfooter from "../components/Rotractfooter";
+import axios from 'axios';
+import { useSearchParams } from 'react-router-dom';
 
 const RotaractNewsFeed = () => {
   const [interactions, setInteractions] = useState({});
+  const [news, setNews] = useState([]);
+  const [searchParams] = useSearchParams();
+  const clubId = searchParams.get('clubId');
 
-  const newsItems = [
-    {
-      id: 1,
-      author: "Rotaract Club",
-      username: "@rotaractofficial",
-      timestamp: "2h ago",
-      content: "🎉 Join us this weekend for our Annual Community Service Drive! We'll be cleaning up Paradise Beach and planting trees. Bring your friends and let's make a difference together! #RotaractInAction",
-      likes: 45,
-      bgColor: "from-blue-50 to-green-50"
-    },
-    {
-      id: 2,
-      author: "Club President",
-      username: "@president",
-      timestamp: "5h ago",
-      content: "Congratulations to our members who participated in the District Leadership Training! Your dedication to personal growth inspires us all. Special shoutout to Sarah for winning the Best Leader award! 🏆 #RotaractLeadership #YouthInAction",
-      likes: 32,
-      bgColor: "from-purple-50 to-pink-50"
-    },
-    {
-      id: 3,
-      author: "Events Committee",
-      username: "@events",
-      timestamp: "1d ago",
-      content: "📢 Next week's professional development workshop on 'Digital Marketing Essentials' is now open for registration. Limited seats available!\n\n🗓️ Date: March 1st\n📍 Location: Main Auditorium\n⏰ Time: 2 PM - 5 PM\n\n#RotaractWorkshop #SkillDevelopment",
-      likes: 28,
-      bgColor: "from-yellow-50 to-orange-50"
+  useEffect(() => {
+    if (clubId) {
+      getNewsByClub();
     }
-  ];
+  }, [clubId]);
+
+  const getNewsByClub = async () => {
+    try {
+      const response = await axios.get(`http://localhost:7000/api/v1/news/${clubId}/getAllNews`);
+      console.log(response.data);
+      setNews(response.data);
+    } catch (error) {
+      console.log('Error while getting news', error);
+    }
+  };
 
   const handleLike = (id) => {
     setInteractions(prev => ({
@@ -56,6 +47,13 @@ const RotaractNewsFeed = () => {
     }));
   };
 
+  // Function to format the date and time
+  const formatDateTime = (dateArray, timeArray) => {
+    if (!dateArray || !timeArray) return "Unknown";
+    const date = new Date(dateArray[0], dateArray[1] - 1, dateArray[2], timeArray[0], timeArray[1], timeArray[2]);
+    return date.toLocaleString();
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50">
       <Rotractnav />
@@ -74,64 +72,64 @@ const RotaractNewsFeed = () => {
 
         {/* News Feed */}
         <div className="space-y-4 p-4">
-          {newsItems.map((item) => (
+          {news.map((item) => (
             <div 
-              key={item.id} 
-              className={`bg-gradient-to-r ${item.bgColor} rounded-xl shadow-md hover:shadow-xl transition-all duration-300 border border-white/50 backdrop-blur-sm`}
+              key={item.newsId} 
+              className="bg-gradient-to-r from-blue-50 to-green-50 rounded-xl shadow-md hover:shadow-xl transition-all duration-300 border border-white/50 backdrop-blur-sm"
             >
               <div className="p-6">
                 {/* Header */}
                 <div className="flex items-center">
-                  <span className="font-bold text-lg text-gray-900">{item.author}</span>
-                  <span className="ml-2 text-gray-600 font-medium">{item.username}</span>
+                  <span className="font-bold text-lg text-gray-900">{item.publisherName}</span>
+                  <span className="ml-2 text-gray-600 font-medium">@{item.publisherName}</span>
                   <span className="mx-2 text-gray-600">·</span>
-                  <span className="text-gray-600 font-medium">{item.timestamp}</span>
+                  <span className="text-gray-600 font-medium">{formatDateTime(item.publishedDate, item.publishedTime)}</span>
                 </div>
+
+                {/* News Title */}
+                <h2 className="mt-2 text-xl font-bold text-gray-900">
+                  {item.newsTitle}
+                </h2>
 
                 {/* Content */}
                 <div className="mt-4">
                   <p className="text-gray-800 text-lg leading-relaxed whitespace-pre-line font-medium">
-                    {item.content}
+                    {item.description}
                   </p>
-                  
-                  {item.image && (
-                    <div className="mt-4 rounded-xl overflow-hidden border border-white/50">
-                      <img 
-                        src={item.image} 
-                        alt="News content" 
-                        className="w-full h-auto object-cover"
-                      />
-                    </div>
-                  )}
                 </div>
 
-                {/* Interaction buttons */}
+                {/* Interaction buttons with counts */}
                 <div className="mt-6 flex items-center space-x-8">
+                  {/* Like Button */}
                   <button 
-                    onClick={() => handleLike(item.id)}
-                    className={`flex items-center group ${interactions[item.id]?.liked ? 'text-red-600' : 'text-gray-600'}`}
+                    onClick={() => handleLike(item.newsId)}
+                    className={`flex items-center group ${interactions[item.newsId]?.liked ? 'text-red-600' : 'text-gray-600'}`}
                   >
                     <div className="p-2 rounded-full group-hover:bg-red-100 transition-colors duration-200">
-                      <Heart 
+                      <ThumbsUp 
                         size={22} 
-                        className={`${interactions[item.id]?.liked ? 'fill-current' : ''}`}
+                        className={`${interactions[item.newsId]?.liked ? 'fill-current' : ''}`}
                       />
                     </div>
                     <span className="ml-1 text-base font-semibold group-hover:text-red-600">
-                      {(item.likes + (interactions[item.id]?.liked ? 1 : 0)).toLocaleString()}
+                      {item.like.membersLike.length + (interactions[item.newsId]?.liked ? 1 : 0)}
                     </span>
                   </button>
 
+                  {/* Dislike Button */}
                   <button 
-                    onClick={() => handleDislike(item.id)}
-                    className={`flex items-center group ${interactions[item.id]?.disliked ? 'text-blue-600' : 'text-gray-600'}`}
+                    onClick={() => handleDislike(item.newsId)}
+                    className={`flex items-center group ${interactions[item.newsId]?.disliked ? 'text-blue-600' : 'text-gray-600'}`}
                   >
                     <div className="p-2 rounded-full group-hover:bg-blue-100 transition-colors duration-200">
                       <ThumbsDown 
                         size={22} 
-                        className={`${interactions[item.id]?.disliked ? 'fill-current' : ''}`}
+                        className={`${interactions[item.newsId]?.disliked ? 'fill-current' : ''}`}
                       />
                     </div>
+                    <span className="ml-1 text-base font-semibold group-hover:text-blue-600">
+                      {item.like.membersDislike.length + (interactions[item.newsId]?.disliked ? 1 : 0)}
+                    </span>
                   </button>
                 </div>
               </div>
