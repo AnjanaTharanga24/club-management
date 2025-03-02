@@ -4,7 +4,7 @@ import { Typewriter } from "react-simple-typewriter";
 import Rotractnav from "../components/Rotractnav";
 import Rotractfooter from "../components/Rotractfooter";
 import axios from "axios";
-import { useSearchParams } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 
 const Rotract = () => {
   const images = ["/r100.jpg", "/r101.jpg", "/r102.jpg", "/r103.jpg"];
@@ -357,7 +357,12 @@ const Rotract = () => {
             Stay updated with the latest happenings in Rotaract! Discover inspiring stories, impactful projects, and global initiatives led by Rotaractors worldwide. 
           </p>
           <p>Explore how young leaders are driving positive change, fostering connections, and making a difference in communities across the globe.</p>
-          <button className="report-button" onClick={() => window.location.href = 'link-to-your-report.pdf'}>Click here</button>
+          {/* <button className="report-button" onClick={() => window.location.href = 'link-to-your-report.pdf'}>Click here</button> */}
+
+
+          <a href={`/rotractnews?clubId=${club.clubId}`}  className=" report-button">Click here</a>
+
+ 
         </div>
   
         {/* Right section with image */}
@@ -381,7 +386,7 @@ const Rotract = () => {
             growth. Visit us today and be part of the story – where service, friendship, 
             and empowerment unite!
           </p>
-          <button className="revent-action-button">Click Here</button>
+          <a href="/rotractevent" className="revent-action-button">Click Here</a>
         </div>
   
         {/* Right Side: Images */}

@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Camera, Save, User, Mail, Phone, School, Home, AtSign } from "lucide-react";
 import Dashboard from "../components/Dashboard";
 import Sidebar from "../components/Sidebar";
+import axios from 'axios';
+import { UserContext } from '../common/UserContext';
 
 const UserProfile = () => {
   // ... (previous state and handlers remain the same)
@@ -16,6 +18,23 @@ const UserProfile = () => {
     hometown: "San Francisco",
     profilePic: "/api/placeholder/150/150"
   });
+  
+  const {user} = useContext(UserContext);
+  const [userDetails,setUserDetails] = useState();
+
+  useEffect(()=>{
+    handleGetUserById();
+  })
+
+  const handleGetUserById = async () => {
+    try {
+      const response = await axios.get(`http://localhost:7000/api/v1/member/getMember-memberId/${user.id}`);
+      console.log(response.data);
+      setUserDetails(response.data);
+    } catch (error) {
+      console.log('Error while getting user details', error);
+    }
+  }
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -52,7 +71,7 @@ const UserProfile = () => {
       < Dashboard />
       <Sidebar />
        
-      <div className="max-w-3xl mx-auto bg-white rounded-lg shadow-xl hover:shadow-2xl transition-shadow duration-300">
+      <div className="max-w-3xl mx-auto bg-white rounded-lg shadow-xl hover:shadow-2xl transition-shadow duration-300 mt-5 ">
        
         <div className="bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-t-lg p-6">
       
@@ -245,6 +264,6 @@ const UserProfile = () => {
       </div>
     </div>
   );
-};
+}
 
 export default UserProfile;
