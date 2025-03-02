@@ -386,7 +386,7 @@ const Rotract = () => {
             growth. Visit us today and be part of the story – where service, friendship, 
             and empowerment unite!
           </p>
-          <a href="/rotractevent" className="revent-action-button">Click Here</a>
+          <a href={`/rotractevent?clubId=${club.clubId}`} className="revent-action-button">Click Here</a>
         </div>
   
         {/* Right Side: Images */}
