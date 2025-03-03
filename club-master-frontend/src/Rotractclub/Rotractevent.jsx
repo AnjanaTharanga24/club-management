@@ -45,21 +45,95 @@ const RotracEvent = () => {
     }
   };
 
-  const handleLike = (eventId) => {
-    setEvents(events.map(event => {
-      if (event.eventId === eventId) {
-        return {
-          ...event,
-          like: {
-            ...event.like,
-            membersLike: event.like.membersLike.includes(memberId)
-              ? event.like.membersLike.filter(id => id !== memberId)
-              : [...event.like.membersLike, memberId]
-          }
-        };
+  const handleLike = async (eventId) => {
+    if (!memberId || !clubId) return;
+    
+    try {
+      const event = events.find(e => e.eventId === eventId);
+      const isLiked = event.like.membersLike.includes(memberId);
+      
+      if (isLiked) {
+        await axios.post(`http://localhost:7000/api/v1/like/${eventId}/removeLikeEvent/${clubId}/${memberId}`);
+      } else {
+        await axios.post(`http://localhost:7000/api/v1/like/${eventId}/addLikeEvent/${clubId}/${memberId}`);
       }
-      return event;
-    }));
+      
+      setEvents(events.map(event => {
+        if (event.eventId === eventId) {
+          return {
+            ...event,
+            like: {
+              ...event.like,
+              membersLike: isLiked
+                ? event.like.membersLike.filter(id => id !== memberId)
+                : [...event.like.membersLike, memberId]
+            }
+          };
+        }
+        return event;
+      }));
+      
+      getEventsByClubId();
+    } catch (error) {
+      console.log('Error handling like', error.response ? error.response.data : error.message);
+      getEventsByClubId();
+    }
+  };
+
+  const handleDislike = async (eventId) => {
+    if (!memberId || !clubId) return;
+    
+    try {
+      const event = events.find(e => e.eventId === eventId);
+      const isDisliked = event.like.membersDislike.includes(memberId);
+      
+      await axios.post(`http://localhost:7000/api/v1/like/${eventId}/removeLikeEvent/${clubId}/${memberId}`);
+      
+      setEvents(events.map(event => {
+        if (event.eventId === eventId) {
+          return {
+            ...event,
+            like: {
+              ...event.like,
+              membersDislike: isDisliked
+                ? event.like.membersDislike.filter(id => id !== memberId)
+                : [...event.like.membersDislike, memberId],
+              membersLike: event.like.membersLike.filter(id => id !== memberId)
+            }
+          };
+        }
+        return event;
+      }));
+      
+      getEventsByClubId();
+    } catch (error) {
+      console.log('Error handling dislike', error.response ? error.response.data : error.message);
+      getEventsByClubId();
+    }
+  };
+
+  const getEventLikeCount = async (eventId) => {
+    if (!memberId || !clubId) return 0;
+    
+    try {
+      const response = await axios.get(`http://localhost:7000/api/v1/like/${eventId}/likeCount/${clubId}/${memberId}`);
+      return response.data;
+    } catch (error) {
+      console.log('Error getting like count', error);
+      return 0;
+    }
+  };
+
+  const getEventDislikeCount = async (eventId) => {
+    if (!memberId || !clubId) return 0;
+    
+    try {
+      const response = await axios.get(`http://localhost:7000/api/v1/like/${eventId}/dislikeCount/${clubId}/${memberId}`);
+      return response.data;
+    } catch (error) {
+      console.log('Error getting dislike count', error);
+      return 0;
+    }
   };
 
   const handleAddComment = async (eventId) => {
@@ -301,13 +375,25 @@ const RotracEvent = () => {
 
                   <div className="relative border-t border-white/10 p-4 bg-white/5 backdrop-blur">
                     <div className="flex justify-between w-full">
-                      <button
-                        className={`flex items-center gap-2 px-4 py-2 rounded-xl hover:bg-white/10 transition-colors text-cyan-100`}
-                        onClick={() => handleLike(event.eventId)}
-                      >
-                        <Heart className={`w-5 h-5 ${event.like.membersLike.includes(memberId) ? 'fill-pink-500 text-pink-500' : ''}`} />
-                        <span>{event.like.membersLike.length}</span>
-                      </button>
+                      <div className="flex gap-4">
+                        <button
+                          className={`flex items-center gap-2 px-4 py-2 rounded-xl hover:bg-white/10 transition-colors text-cyan-100`}
+                          onClick={() => handleLike(event.eventId)}
+                          disabled={!memberId}
+                        >
+                          <Heart className={`w-5 h-5 ${event.like && event.like.membersLike && event.like.membersLike.includes(memberId) ? 'fill-pink-500 text-pink-500' : ''}`} />
+                          <span>{event.like && event.like.membersLike ? event.like.membersLike.length : 0}</span>
+                        </button>
+                        
+                        <button
+                          className={`flex items-center gap-2 px-4 py-2 rounded-xl hover:bg-white/10 transition-colors text-cyan-100`}
+                          onClick={() => handleDislike(event.eventId)}
+                          disabled={!memberId}
+                        >
+                          <Heart className={`w-5 h-5 rotate-180 ${event.like && event.like.membersDislike && event.like.membersDislike.includes(memberId) ? 'fill-indigo-500 text-indigo-500' : ''}`} />
+                          <span>{event.like && event.like.membersDislike ? event.like.membersDislike.length : 0}</span>
+                        </button>
+                      </div>
                       
                       <button
                         className="flex items-center gap-2 px-4 py-2 rounded-xl hover:bg-white/10 transition-colors text-cyan-100"
