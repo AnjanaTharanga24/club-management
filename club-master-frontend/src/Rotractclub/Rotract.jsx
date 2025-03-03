@@ -8,32 +8,47 @@ import { Link, useSearchParams } from "react-router-dom";
 
 const Rotract = () => {
   const images = ["/r100.jpg", "/r101.jpg", "/r102.jpg", "/r103.jpg"];
-  
+
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [alternateImage, setAlternateImage] = useState("revent2.jpg");
   const [isImpactVisible, setIsImpactVisible] = useState(false);
   const [counts, setCounts] = useState({ members: 0, projects: 0, awards: 0 });
 
   const [searchParams] = useSearchParams();
-  const clubId = searchParams.get('clubId');
+  const clubId = searchParams.get("clubId");
   const [club, setClub] = useState({});
+  const [project, setProjects] = useState({});
+
+  const getAllProjects = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:7000/api/v1/project/${clubId}/getAllProjectsByClubId`
+      );
+      console.log("fetch projects", response.data);
+      setProjects(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   useEffect(() => {
     if (clubId) {
       getClub();
+      getAllProjects();
     }
   }, [clubId]);
 
-  const getClub = async () =>{
+  const getClub = async () => {
     try {
-      const response = await axios.get(`http://localhost:7000/api/v1/club/findClub/${clubId}`);
+      const response = await axios.get(
+        `http://localhost:7000/api/v1/club/findClub/${clubId}`
+      );
       console.log(response.data);
       setClub(response.data);
     } catch (error) {
-      console.log('Error while getting club', error);
+      console.log("Error while getting club", error);
     }
-
-  }
+  };
 
   useEffect(() => {
     // Image carousel effect
@@ -151,32 +166,7 @@ const Rotract = () => {
       icon: "/rr5.png",
     },
   ];
-  const members = [
-    {
-      role: 'President',
-      name: 'John Doe',
-      email: 'john.doe@example.com',
-      image: '/tt1.jpg',
-    },
-    {
-      role: 'Vice President',
-      name: 'Jane Smith',
-      email: 'jane.smith@example.com',
-      image: '/tt1.jpg',
-    },
-    {
-      role: 'Secretary',
-      name: 'Mike Brown',
-      email: 'mike.brown@example.com',
-      image: '/tt1.jpg',
-    },
-    {
-      role: 'Treasurer',
-      name: 'Sara Davis',
-      email: 'sara.davis@example.com',
-      image: '/tt1.jpg',
-    },
-  ];
+
   const projects = [
     {
       title: "Project Kids First",
@@ -206,42 +196,40 @@ const Rotract = () => {
     {
       image: "/rocaward1.jpg",
       title: "Best Innovation Award 2024",
-      description: "Recognition for groundbreaking technological advancement"
+      description: "Recognition for groundbreaking technological advancement",
     },
     {
       image: "/rocaward2.png",
       title: "Excellence in Design 2024",
-      description: "Outstanding achievement in product design"
+      description: "Outstanding achievement in product design",
     },
     {
       image: "/rocaward3.jpg",
       title: "Customer Choice Award",
-      description: "Voted best by our valued customers"
+      description: "Voted best by our valued customers",
     },
     {
       image: "/rocaward4.png",
       title: "Sustainability Champion",
-      description: "Leading environmental responsibility initiatives"
+      description: "Leading environmental responsibility initiatives",
     },
     {
       image: "/rocaward5.png",
       title: "Industry Leadership Award",
-      description: "Setting standards in industry excellence"
-    }
+      description: "Setting standards in industry excellence",
+    },
   ];
 
   // Add this useEffect for awards carousel
   useEffect(() => {
     const awardTimer = setInterval(() => {
-      setCurrentAwardIndex((prevIndex) => 
+      setCurrentAwardIndex((prevIndex) =>
         prevIndex === awards.length - 1 ? 0 : prevIndex + 1
       );
     }, 3000);
 
     return () => clearInterval(awardTimer);
   }, []);
-
-  
 
   return (
     <div>
@@ -255,10 +243,14 @@ const Rotract = () => {
         <div className="text-overlay">
           <h1>
             {club.clubVision}
-            
+
             <div className="typewriter-text2">
               <Typewriter
-                words={["urgent problems.", "critical issues.", "global crises."]}
+                words={[
+                  "urgent problems.",
+                  "critical issues.",
+                  "global crises.",
+                ]}
                 loop={0}
                 cursor
                 cursorStyle="|"
@@ -281,7 +273,10 @@ const Rotract = () => {
         <div className="interface-content">
           <div className="intro animate-on-scroll">
             <p>
-            {club.clubName} is a club for young people focused on community service, leadership development, and networking. It is part of Rotary International and aims to create positive change through various local and international projects.
+              {club.clubName} is a club for young people focused on community
+              service, leadership development, and networking. It is part of
+              Rotary International and aims to create positive change through
+              various local and international projects.
             </p>
           </div>
 
@@ -290,7 +285,6 @@ const Rotract = () => {
             <img src="/roci2.jpg" alt="Group 2" className="image" />
             <img src="/nnn.jpg" alt="Group 3" className="image" />
             <img src="/roci3.jpg" alt="Group 3" className="image" />
-            
           </div>
 
           <div className="video-section animate-on-scroll">
@@ -309,15 +303,12 @@ const Rotract = () => {
           </div>
         </div>
       </div>
-       {/* Main Avenues Interface */}
-       <div className="avenues-container">
+      {/* Main Avenues Interface */}
+      <div className="avenues-container">
         <h2>Main Avenues</h2>
         <div className="avenues">
           {avenues.map((avenue, index) => (
-            <div
-              key={index}
-              className="avenue-card animate-on-scroll"
-            >
+            <div key={index} className="avenue-card animate-on-scroll">
               <img
                 src={avenue.icon}
                 alt={`${avenue.title} Icon`}
@@ -329,79 +320,175 @@ const Rotract = () => {
           ))}
         </div>
       </div>
-       {/* project interface*/}
+      {/* project interface*/}
 
-       <div className="latest-projects animate-on-scroll">
-      <h2>Latest Projects</h2>
-      <div className="project-cards-container">
-        {projects.map((project, index) => (
-          <div key={index} className="project-card">
-            <img src={project.image} alt={project.title} className="project-card-image" />
-            <div className="project-card-content">
-              <p className="project-card-date">{project.date}</p>
-              <h3 className="project-card-title">{project.title}</h3>
-              <p className="project-card-description">{project.description}</p>
-            </div>
+      <section className="pg-container">
+        <header className="pg-header">
+          <h2 className="pg-title">Latest Projects</h2>
+          <div className="pg-title-accent"></div>
+        </header>
+
+        {project.length > 0 ? (
+          <div className="pg-grid  ">
+            {project.map((project, index) => (
+              <article className="pg-card p-3 shadow" key={index}>
+                <div className="pg-card-media">
+                  <img src="/rocaward1.jpg" alt={project.title} />
+                  <div className="pg-card-overlay">
+                    <span className="pg-view-btn">View Project</span>
+                  </div>
+                </div>
+                <div className="pg-card-body">
+                  <span className="pg-card-date">{project.date}</span>
+                  <h3 className="pg-card-title">{project.projectName}</h3>
+                  <p className="pg-card-desc">{project.description}</p>
+
+                  <ul className="pg-card-details">
+                    <li className="pg-detail-item">
+                      <div className="pg-detail-icon">📅</div>
+                      <div className="pg-detail-content">
+                        <span className="pg-detail-label">Published</span>
+                        <span className="pg-detail-value">
+                          {project.publishedDate}
+                        </span>
+                      </div>
+                    </li>
+                    <li className="pg-detail-item">
+                      <div className="pg-detail-icon">👤</div>
+                      <div className="pg-detail-content">
+                        <span className="pg-detail-label">Publisher</span>
+                        <span className="pg-detail-value">
+                          {project.publisherName}
+                        </span>
+                      </div>
+                    </li>
+                    <li className="pg-detail-item">
+                      <div className="pg-detail-icon">🗓️</div>
+                      <div className="pg-detail-content">
+                        <span className="pg-detail-label">Event Date</span>
+                        <span className="pg-detail-value">
+                          {project.projectHeldDate}
+                        </span>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+              </article>
+            ))}
           </div>
-        ))}
-      </div>
-    </div>
-    
+        ) : (
+          <div className="pg-empty">
+            <div className="pg-empty-illustration">
+              <svg
+                width="120"
+                height="100"
+                viewBox="0 0 120 100"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <rect
+                  x="20"
+                  y="20"
+                  width="80"
+                  height="60"
+                  rx="2"
+                  stroke="#CBD5E0"
+                  strokeWidth="2"
+                  strokeDasharray="4 4"
+                />
+                <path
+                  d="M40 50H80M40 60H70"
+                  stroke="#CBD5E0"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                />
+                <circle
+                  cx="60"
+                  cy="35"
+                  r="8"
+                  stroke="#CBD5E0"
+                  strokeWidth="2"
+                />
+              </svg>
+            </div>
+            <p className="pg-empty-text">No projects found.</p>
+            <p className="pg-empty-hint">Check back later for new projects.</p>
+          </div>
+        )}
+      </section>
 
       {/* report interface*/}
       <div className="report-container animate-on-scroll">
         {/* Left section with text */}
         <div className="report-left-section">
-          <h1>Stay Updated with the Latest <span className="red-text">NEWS!</span></h1>
+          <h1>
+            Stay Updated with the Latest <span className="red-text">NEWS!</span>
+          </h1>
           <p>
-            Stay updated with the latest happenings in Rotaract! Discover inspiring stories, impactful projects, and global initiatives led by Rotaractors worldwide. 
+            Stay updated with the latest happenings in Rotaract! Discover
+            inspiring stories, impactful projects, and global initiatives led by
+            Rotaractors worldwide.
           </p>
-          <p>Explore how young leaders are driving positive change, fostering connections, and making a difference in communities across the globe.</p>
+          <p>
+            Explore how young leaders are driving positive change, fostering
+            connections, and making a difference in communities across the
+            globe.
+          </p>
           {/* <button className="report-button" onClick={() => window.location.href = 'link-to-your-report.pdf'}>Click here</button> */}
 
-
-          <a href={`/rotractnews?clubId=${club.clubId}`}  className=" report-button">Click here</a>
-
- 
+          <a
+            href={`/rotractnews?clubId=${club.clubId}`}
+            className=" report-button"
+          >
+            Click here
+          </a>
         </div>
-  
+
         {/* Right section with image */}
         <div className="report-right-section">
           <img src="Annualrotract.jpg" alt="Annual Report" />
         </div>
       </div>
-       {/* rotract events */}
-  
+      {/* rotract events */}
+
       <div className="revent-container animate-on-scroll">
         {/* Left Side: Text Content */}
         <div className="revent-text-section">
-        <h1>See what's new on the RACUOK <span className="red-text">EVENTS!</span></h1>
-  
+          <h1>
+            See what's new on the RACUOK{" "}
+            <span className="red-text">EVENTS!</span>
+          </h1>
+
           <p>
-            Explore our dynamic content showcasing the impact of passionate individuals 
-            and their journey towards positive transformation.
+            Explore our dynamic content showcasing the impact of passionate
+            individuals and their journey towards positive transformation.
           </p>
           <p>
-            Discover how we’re making a difference in society while unlocking personal 
-            growth. Visit us today and be part of the story – where service, friendship, 
-            and empowerment unite!
+            Discover how we’re making a difference in society while unlocking
+            personal growth. Visit us today and be part of the story – where
+            service, friendship, and empowerment unite!
           </p>
-          <a href={`/rotractevent?clubId=${club.clubId}`} className="revent-action-button">Click Here</a>
+          <a
+            href={`/rotractevent?clubId=${club.clubId}`}
+            className="revent-action-button"
+          >
+            Click Here
+          </a>
         </div>
-  
+
         {/* Right Side: Images */}
         <div className="revent-image-section">
-          
-          <img src={alternateImage} alt="Alternate Event" className="revent-image" />
-          
-          
-         
+          <img
+            src={alternateImage}
+            alt="Alternate Event"
+            className="revent-image"
+          />
         </div>
       </div>
       <div className="awards-section animate-on-scroll">
         <h2>Our Awards & Recognition</h2>
         <div className="carousel-container">
-          <div 
+          <div
             className="carousel-track"
             style={{
               transform: `translateX(-${currentAwardIndex * 100}%)`,
@@ -429,39 +516,59 @@ const Rotract = () => {
               <button
                 key={index}
                 onClick={() => setCurrentAwardIndex(index)}
-                className={`nav-dot ${currentAwardIndex === index ? 'active' : ''}`}
+                className={`nav-dot ${
+                  currentAwardIndex === index ? "active" : ""
+                }`}
                 aria-label={`Go to slide ${index + 1}`}
               />
             ))}
           </div>
         </div>
       </div>
-      
+
       {/* Executive bord */}
-      <div className="executive-board animate-on-scroll">
-      <h1>Executive Board</h1>
-      <div className="members">
-        {members.map((member, index) => (
-          <div className="member" key={index}>
-            <img src={member.image} alt={`${member.role} - ${member.name}`} />
-            <h2>{member.role}</h2>
-            <p>{member.name}</p>
-            <p>{member.email}</p>
-          </div>
-        ))}
+      {/* Executive Board */}
+      <div className="executive-board-container">
+        <div className="board-header">
+          <h1>Executive Board</h1>
+          <div className="decorative-line"></div>
+        </div>
+
+        <div className="board-members">
+          {club.positionHoldingMembersAndRoles?.map((member, index) => (
+            <div className="member-profile" key={index}>
+              <div className="profile-frame">
+                <img
+                  src={member.profileImage || "/tt1.jpg"}
+                  alt={`${member.role} - ${member.memberName}`}
+                />
+                <div className="member-badge">{member.role}</div>
+              </div>
+              <div className="member-content">
+                <h2>{member.memberName}</h2>
+                <div className="contact-info">
+                  <span className="email-icon">✉</span>
+                  <span>{member.email || "No email provided"}</span>
+                </div>
+                <div className="member-bio">
+                  {member.bio || "Club executive board member"}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
-    </div>
 
       {/* Our Impact Section */}
       <div className="impact-container animate-on-scroll">
         <h2 className="impact-heading">Our Impact in Figures</h2>
         <div className="impact-box">
           <div className="impact-item">
-            <p className="impact-number">{counts.members}+</p>
+            <p className="impact-number">{club.associatedMembers ? club.associatedMembers.length : 0}+</p>
             <p className="impact-label">Members</p>
           </div>
           <div className="impact-item">
-            <p className="impact-number">{counts.projects}+</p>
+            <p className="impact-number">{project.length}+</p>
             <p className="impact-label">Projects</p>
           </div>
           <div className="impact-item">
@@ -471,7 +578,6 @@ const Rotract = () => {
         </div>
       </div>
       <Rotractfooter />
-      
     </div>
   );
 };
