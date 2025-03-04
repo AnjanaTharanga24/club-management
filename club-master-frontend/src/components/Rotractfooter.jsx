@@ -1,7 +1,8 @@
 import React from "react";
 import "./RotractFooter.css"; // Updated file name to match convention
+import { Link } from "react-router-dom";
 
-const Rotractfooter = () => {
+const Rotractfooter = ({clubName}) => {
   return (
     <footer className="rotract-footer">
       <div className="rotract-footer-columns">
@@ -22,7 +23,7 @@ const Rotractfooter = () => {
 
         {/* Contact Us Section */}
         <div className="rotract-footer-column">
-          <h4 className="rotract-heading">Contact Us</h4>
+          <h4 className="rotract-heading">Contact {clubName} Us</h4>
           <p className="rotract-text">
             Need help or have a question? <br />
             Contact us at: <a href="mailto:info@racuok.lk">info@racuok.lk</a>
@@ -31,12 +32,11 @@ const Rotractfooter = () => {
 
         {/* RACUOK Section */}
         <div className="rotract-footer-column">
-          <h4 className="rotract-heading">RACUOK</h4>
-          <ul className="rotract-footer-list">
-            <li>Home</li>
-            <li>About Us</li>
-            <li>Contact Us</li>
-            <li>Events</li>
+          <h4 className="rotract-heading">Club Master</h4>
+          <ul className="d-flex flex-column">
+            <a href="/">Home</a>
+            <a href="/about">About Us</a>
+            <a href="/contact">Contact Us</a>
           </ul>
         </div>
 

@@ -1,14 +1,11 @@
 import React from "react";
 
-const Rotractnav = () => {
+const Rotractnav = ({ clubEventPage, clubNewsPage }) => {
   return (
     <nav className="bg-white shadow-md fixed top-0 left-0 w-full z-50">
       <div className="container mx-auto px-6 py-4 flex items-center justify-between">
         {/* Left section: Logo */}
-        <a
-          className="flex items-center"
-          href="/"
-        >
+        <a className="flex items-center" href="/">
           <img
             src="/rotractuok.png"
             alt="Logo"
@@ -38,13 +35,13 @@ const Rotractnav = () => {
           </a>
           <a
             className="bg-blue-500 text-white hover:bg-blue-600 transition duration-300 px-5 py-3 rounded-full text-lg"
-            href="/rotractevent"
+            href={clubEventPage}
           >
             Events
           </a>
           <a
             className="bg-blue-500 text-white hover:bg-blue-600 transition duration-300 px-5 py-3 rounded-full text-lg"
-            href="/rotractnews"
+            href={clubNewsPage}
           >
             News
           </a>

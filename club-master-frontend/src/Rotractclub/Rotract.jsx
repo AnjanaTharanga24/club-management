@@ -18,6 +18,20 @@ const Rotract = () => {
   const clubId = searchParams.get("clubId");
   const [club, setClub] = useState({});
   const [project, setProjects] = useState({});
+  const [awards, setAwards] = useState([]);
+  const [currentAwardIndex, setCurrentAwardIndex] = useState(0);
+
+  const getAllAwardsByClub = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:7000/api/v1/award/${clubId}/getAllAwardsByClubId`
+      );
+      setAwards(response.data);
+      console.log("fetch awards", response.data);
+    } catch (error) {
+      console.log("Error while getting awards", error);
+    }
+  };
 
   const getAllProjects = async () => {
     try {
@@ -35,6 +49,7 @@ const Rotract = () => {
     if (clubId) {
       getClub();
       getAllProjects();
+      getAllAwardsByClub();
     }
   }, [clubId]);
 
@@ -134,6 +149,7 @@ const Rotract = () => {
       });
     }
   }, [isImpactVisible]);
+
   const avenues = [
     {
       title: "Club Service",
@@ -167,59 +183,6 @@ const Rotract = () => {
     },
   ];
 
-  const projects = [
-    {
-      title: "Project Kids First",
-      date: "Jul 22, 2022",
-      description:
-        "Kids First is a project empowering school students to recognize, prevent, and combat sexual harassment through safe, age-appropriate, and interactive sessions. It fosters awareness of boundaries, respect, and consent while building confidence to report and stand against harassment, ensuring the safety and well-being of the next generation.",
-      image: "pr100.jpg",
-    },
-    {
-      title: "Project Akura",
-      date: "Jul 22, 2022",
-      description:
-        "For seven years, Akura has supplied rural schools with books, essential supplies, and support, nurturing a love for learning and bridging educational gaps. This enduring initiative has transformed schools into hubs of opportunity, empowering students to dream big and ensuring every child can access quality education.",
-      image: "pr101.jpg",
-    },
-    {
-      title: "Beach Cleanup",
-      date: "Sep 15, 2023",
-      description:
-        "Our recent beach outing blended relaxation with purpose through a cleanup initiative. Club members of all ages worked together to remove litter, leaving the beach pristine. This fulfilling experience proved sustainability and enjoyment can coexist, reminding us that small efforts preserve our natural treasures for future enjoyment.",
-      image: "pr102.jpg",
-    },
-  ];
-  const [currentAwardIndex, setCurrentAwardIndex] = useState(0);
-
-  const awards = [
-    {
-      image: "/rocaward1.jpg",
-      title: "Best Innovation Award 2024",
-      description: "Recognition for groundbreaking technological advancement",
-    },
-    {
-      image: "/rocaward2.png",
-      title: "Excellence in Design 2024",
-      description: "Outstanding achievement in product design",
-    },
-    {
-      image: "/rocaward3.jpg",
-      title: "Customer Choice Award",
-      description: "Voted best by our valued customers",
-    },
-    {
-      image: "/rocaward4.png",
-      title: "Sustainability Champion",
-      description: "Leading environmental responsibility initiatives",
-    },
-    {
-      image: "/rocaward5.png",
-      title: "Industry Leadership Award",
-      description: "Setting standards in industry excellence",
-    },
-  ];
-
   // Add this useEffect for awards carousel
   useEffect(() => {
     const awardTimer = setInterval(() => {
@@ -233,7 +196,10 @@ const Rotract = () => {
 
   return (
     <div>
-      <Rotractnav />
+      <Rotractnav
+        clubNewsPage={`/rotractnews?clubId=${club.clubId}&clubName=${club.clubName}`}
+        clubEventPage={`/rotractevent?clubId=${club.clubId}&clubName=${club.clubName}`}
+      />
 
       {/* Background Section */}
       <div
@@ -437,7 +403,7 @@ const Rotract = () => {
           {/* <button className="report-button" onClick={() => window.location.href = 'link-to-your-report.pdf'}>Click here</button> */}
 
           <a
-            href={`/rotractnews?clubId=${club.clubId}`}
+            href={`/rotractnews?clubId=${club.clubId}&clubName=${club.clubName}`}
             className=" report-button"
           >
             Click here
@@ -469,7 +435,7 @@ const Rotract = () => {
             service, friendship, and empowerment unite!
           </p>
           <a
-            href={`/rotractevent?clubId=${club.clubId}`}
+            href={`/rotractevent?clubId=${club.clubId}&clubName=${club.clubName}`}
             className="revent-action-button"
           >
             Click Here
@@ -498,12 +464,12 @@ const Rotract = () => {
               <div key={index} className="award-slide">
                 <div className="award-card">
                   <img
-                    src={award.image}
+                    src={award.awardImageUrl}
                     alt={award.title}
                     className="award-image"
                   />
                   <div className="award-content">
-                    <h3 className="award-heading">{award.title}</h3>
+                    <h3 className="award-heading">{award.awardName}</h3>
                     <p className="award-description">{award.description}</p>
                   </div>
                 </div>
@@ -564,7 +530,9 @@ const Rotract = () => {
         <h2 className="impact-heading">Our Impact in Figures</h2>
         <div className="impact-box">
           <div className="impact-item">
-            <p className="impact-number">{club.associatedMembers ? club.associatedMembers.length : 0}+</p>
+            <p className="impact-number">
+              {club.associatedMembers ? club.associatedMembers.length : 0}+
+            </p>
             <p className="impact-label">Members</p>
           </div>
           <div className="impact-item">
@@ -572,12 +540,12 @@ const Rotract = () => {
             <p className="impact-label">Projects</p>
           </div>
           <div className="impact-item">
-            <p className="impact-number">{counts.awards}+</p>
+            <p className="impact-number">{awards.length}+</p>
             <p className="impact-label">Awards</p>
           </div>
         </div>
       </div>
-      <Rotractfooter />
+      <Rotractfooter clubName={club.clubName} />
     </div>
   );
 };
