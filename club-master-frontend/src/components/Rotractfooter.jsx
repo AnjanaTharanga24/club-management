@@ -2,7 +2,7 @@ import React from "react";
 import "./RotractFooter.css"; // Updated file name to match convention
 import { Link } from "react-router-dom";
 
-const Rotractfooter = ({clubName}) => {
+const Rotractfooter = ({clubName,clubVision}) => {
   return (
     <footer className="rotract-footer">
       <div className="rotract-footer-columns">
@@ -13,11 +13,8 @@ const Rotractfooter = ({clubName}) => {
             alt="Rotaract Club Logo"
             className="rotractf-logo"
           />
-          <p className="rotract-text">
-            With a noble desire to serve humanity, the Rotaract Club of
-            University of Kelaniya strives forth to give spirit and life to
-            numerous projects done throughout the year focused on a clear vision
-            and a mission.
+          <p className="rotract-text p-3">
+            {clubVision}
           </p>
         </div>
 
