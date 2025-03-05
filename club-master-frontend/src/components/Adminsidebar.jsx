@@ -8,7 +8,7 @@ import {
 
 import './Adminsidebar.css'; // Updated CSS file name
 
-const Adminsidebar = () => {
+const Adminsidebar = ({ changeView }) => {
   const [selectedCategory, setSelectedCategory] = useState(null);
 
   const handleCategoryClick = (category) => {
@@ -20,7 +20,7 @@ const Adminsidebar = () => {
       case "Main Admin":
         return (
           <ul className="administrator-submenu">
-            <li><FaPlus className="submenu-icon" /> Create New Admin</li>
+            <li onClick={() => changeView('createNewAdmin')}><FaPlus className="submenu-icon" /> Create New Admin</li>
             <li><FaUsers className="submenu-icon" /> View All Main Admins</li>
             <li><FaEdit className="submenu-icon" /> Update Admin Profile</li>
             <li><FaIdCard className="submenu-icon" /> Get Main Admins by ID</li>
