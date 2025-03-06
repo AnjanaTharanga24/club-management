@@ -130,10 +130,10 @@ const Navbar = () => {
                         My Profile
                       </a>
 
-                      {user.role === "ADMIN" && (
+                      {user.role === "MAIN_ADMIN" && (
                         <a
                           className="block px-4 py-2 text-sm text-white hover:bg-gray-700 transition duration-200"
-                          href="/userprofile"
+                          href="/mainAdmin"
                         >
                           Admin dashboard
                         </a>
