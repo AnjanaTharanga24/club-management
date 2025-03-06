@@ -1,12 +1,10 @@
-
 import React, { useState } from "react";
 import { 
   FaUsers, FaPlus, FaCalendarAlt, FaNewspaper, FaProjectDiagram, 
   FaUserShield, FaTrophy, FaUserTie, FaEdit, FaIdCard, FaTrash 
 } from "react-icons/fa";
 
-
-import './Adminsidebar.css'; // Updated CSS file name
+import './Adminsidebar.css';
 
 const Adminsidebar = ({ changeView }) => {
   const [selectedCategory, setSelectedCategory] = useState(null);
@@ -21,7 +19,7 @@ const Adminsidebar = ({ changeView }) => {
         return (
           <ul className="administrator-submenu">
             <li onClick={() => changeView('createNewAdmin')}><FaPlus className="submenu-icon" /> Create New Admin</li>
-            <li><FaUsers className="submenu-icon" /> View All Main Admins</li>
+            <li onClick={() => changeView('viewAllMainAdmin')}><FaUsers className="submenu-icon" /> View All Main Admins</li>
             <li><FaEdit className="submenu-icon" /> Update Admin Profile</li>
             <li><FaIdCard className="submenu-icon" /> Get Main Admins by ID</li>
           </ul>
@@ -78,7 +76,7 @@ const Adminsidebar = ({ changeView }) => {
   };
 
   return (
-    <div className="administrator-sidebar">
+    <div className="administrator-sidebar mt-5">
       <ul className="administrator-sidebar-list">
         <li 
           className="administrator-sidebar-item" 
@@ -156,4 +154,3 @@ const Adminsidebar = ({ changeView }) => {
 };
 
 export default Adminsidebar;
-

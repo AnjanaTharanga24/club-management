@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import Navbar from '../components/Navbar';
 import Adminsidebar from '../components/Adminsidebar';
 import CreateMainAdmin from '../components/CreateMainAdmin';
+import ViewAllMainAdmin from './ViewAllMainAdmin';
+import '../pages/MainAdminDashboard.css'; 
 
 export default function MainAdminDashboard() {
   const [currentView, setCurrentView] = useState("default");
@@ -16,17 +18,26 @@ export default function MainAdminDashboard() {
     switch (currentView) {
       case 'createNewAdmin':
         return <CreateMainAdmin />;
+      case 'viewAllMainAdmin':
+        return <ViewAllMainAdmin/>;
       default:
-        return <div>Welcome to the Admin Dashboard</div>;
+        return (
+          <div className="welcome-container">
+            <h1>Welcome to the Admin Dashboard</h1>
+            <p>Select an option from the sidebar to get started.</p>
+          </div>
+        );
     }
   };
 
   return (
-    <div>
+    <div className="dashboard-container">
       <Navbar />
-      <Adminsidebar changeView={changeView} />
-      <div className="main-content">
-        {renderMainContent()}
+      <div className="dashboard-content">
+        <Adminsidebar changeView={changeView} />
+        <div className="main-content">
+          {renderMainContent()}
+        </div>
       </div>
     </div>
   );
