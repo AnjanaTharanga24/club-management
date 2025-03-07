@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import "../pages/ViewAllMainAdmin.css"; 
+import "../admin/ViewAllMainAdmin.css"; 
 
 export default function ViewAllMainAdmin() {
   const [admins, setAdmins] = useState([]);

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { User, Mail, Phone, Lock, UserPlus, X } from "lucide-react";
-import "../components/CreateMainAdmin.css";
+import "../admin/CreateMainAdmin.css";
 import axios from "axios";
 import Swal from "sweetalert2";
 

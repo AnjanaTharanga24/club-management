@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import Navbar from '../components/Navbar';
 import Adminsidebar from '../components/Adminsidebar';
-import CreateMainAdmin from '../components/CreateMainAdmin';
+import '../admin/MainAdminDashboard.css'; 
+import'./CreateMainAdmin'
+import CreateMainAdmin from './CreateMainAdmin';
 import ViewAllMainAdmin from './ViewAllMainAdmin';
-import '../pages/MainAdminDashboard.css'; 
+import ClubRegistrationForm from './NewClub';
 
 export default function MainAdminDashboard() {
   const [currentView, setCurrentView] = useState("default");
@@ -20,6 +22,8 @@ export default function MainAdminDashboard() {
         return <CreateMainAdmin />;
       case 'viewAllMainAdmin':
         return <ViewAllMainAdmin/>;
+      case 'createClub':
+        return <ClubRegistrationForm/>
       default:
         return (
           <div className="welcome-container">
