@@ -136,6 +136,17 @@
   box-shadow: 0 5px 15px rgba(92, 107, 192, 0.3);
 }
 
+.club-btn-delete{
+    background: red;
+  color: white;
+  border: none;
+  padding: 8px 20px;
+  border-radius: 25px;
+  font-weight: 500;
+  transition: all 0.3s;
+  box-shadow: 0 5px 15px rgba(232, 149, 6, 0.3);
+}
+
 .club-btn-details:hover {
   background: #3949ab;
   transform: scale(1.05);
