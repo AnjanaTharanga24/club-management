@@ -1,9 +1,9 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import Swal from 'sweetalert2'; // Import SweetAlert2
+import Swal from 'sweetalert2'; 
 import "./ViewAllClubs.css";
 
-export default function ViewAllClubs() {
+export default function ViewAllClubs({ changeView }) {
   const [clubs, setClubs] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -116,7 +116,7 @@ export default function ViewAllClubs() {
 
                     <div className="d-flex justify-content-between">
                       <div className="club-card-footer">
-                        <button className="club-btn-details">
+                        <button className="club-btn-details" onClick={() => changeView('viewClub',club.clubId)}>
                           View Details
                         </button>
                       </div>
