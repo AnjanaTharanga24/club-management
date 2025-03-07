@@ -28,7 +28,7 @@ const Adminsidebar = ({ changeView }) => {
         return (
           <ul className="administrator-submenu">
             <li onClick={() => changeView('createClub')}><FaPlus className="submenu-icon" /> <a>Create Club</a></li>
-            <li><FaPlus className="submenu-icon" /> View All Clubs</li>
+            <li onClick={() => changeView('viewClubs')}><FaPlus className="submenu-icon" /> View All Clubs</li>
             <li><FaPlus className="submenu-icon" /> Update Club</li>
             <li><FaPlus className="submenu-icon" /> Delete Club</li>
             <li><FaPlus className="submenu-icon" /> Get Club by Club ID</li>
