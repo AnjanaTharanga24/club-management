@@ -1,21 +1,14 @@
 import React, { useState } from 'react';
-import { Upload } from 'lucide-react';
-import Adminsidebar from "../components/Adminsidebar";
-
-
-
+import axios from 'axios';
+import Swal from 'sweetalert2';
 
 const ClubRegistrationForm = () => {
   const [formData, setFormData] = useState({
     clubName: '',
     clubAddress: '',
-    seniorAdvisor: '',
+    clubSeniorAdviser: '',
     clubProducer: '',
     clubVision: '',
-    logo: null,
-    backgroundImage1: null,
-    backgroundImage2: null,
-    backgroundImage3: null
   });
 
   const handleInputChange = (e) => {
@@ -26,33 +19,70 @@ const ClubRegistrationForm = () => {
     }));
   };
 
-  const handleImageChange = (e) => {
-    const { name, files } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: files[0]
-    }));
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    console.log('Form data being sent:', formData);
+
+    try {
+      const response = await axios.post('http://localhost:7000/api/v1/club/save', formData, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+      console.log('Club created successfully:', response.data);
+      Swal.fire({
+                    title: "Submitted",
+                    text: "New club created successful",
+                    icon: "success",
+                    timer: 1500,
+                    showConfirmButton: false,
+                    background: "#fff",
+                    customClass: {
+                      popup: "swal-popup",
+                    },
+                  })
+      
+
+    } catch (error) {
+      console.error('Error while creating club:', error.response ? error.response.data : error.message);
+       Swal.fire({
+                    title: "Creation Failed",
+                    text: "Something went wrong. Please try again.",
+                    icon: "error",
+                    confirmButtonText: "Try Again",
+                    confirmButtonColor: "#d33",
+                    background: "#fff",
+                    customClass: {
+                      title: "swal-title",
+                      popup: "swal-popup",
+                    },
+                  });
+    }
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log('Form submitted:', formData);
-    // Handle form submission logic here
-  };
+  const handleReset = () =>{
+    setFormData({
+      clubName: '',
+      clubAddress: '',
+      clubSeniorAdviser: '',
+      clubProducer: '',
+      clubVision: '',
+    })
+  }
+  
+// const handleImageChange = (e) => {
+//   const { name, files } = e.target;
+//   setFormData(prev => ({
+//     ...prev,
+//     [name]: files[0]
+//   }));
+// };
+
 
   return (
-    <div className="flex"> <Adminsidebar />
-    
-    
-    <div className="flex-1 max-w-3xl mx-auto bg-white rounded-lg shadow-lg p-8 mt-10 ">
-        
-        
-        
+    <div className="flex-1 p-5  mx-auto bg-white rounded-lg shadow-lg p-8 mt-10" style={{ boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)' , width: '1100px',height: '510px'}}>
       <h2 className="text-2xl font-bold text-center mb-6">New Club Registration</h2>
-      
-      
-      <form onSubmit={handleSubmit} className="space-y-4">
-        {/* Basic Information - Row 1 */}
+      <form className="space-y-4" onSubmit={handleSubmit}>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -85,7 +115,6 @@ const ClubRegistrationForm = () => {
           </div>
         </div>
 
-        {/* Row 2 */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -93,8 +122,8 @@ const ClubRegistrationForm = () => {
             </label>
             <input
               type="text"
-              name="seniorAdvisor"
-              value={formData.seniorAdvisor}
+              name="clubSeniorAdviser"
+              value={formData.clubSeniorAdviser}
               onChange={handleInputChange}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="Enter senior advisor name"
@@ -118,24 +147,24 @@ const ClubRegistrationForm = () => {
           </div>
         </div>
 
-        {/* Row 3 */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Club Vision
-            </label>
-            <textarea
-              name="clubVision"
-              value={formData.clubVision}
-              onChange={handleInputChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="Enter club vision"
-              rows={3}
-              required
-            />
-          </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Club Vision
+          </label>
+          <textarea
+            name="clubVision"
+            value={formData.clubVision}
+            onChange={handleInputChange}
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="Enter club vision"
+            rows={3}
+            required
+          />
 
-          <div>
+          
+        </div>
+
+        {/* <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Club Logo
             </label>
@@ -155,11 +184,10 @@ const ClubRegistrationForm = () => {
                 />
               </label>
             </div>
-          </div>
-        </div>
+          </div> */}
 
-        {/* Background Images Row */}
-        <div className="grid grid-cols-3 gap-4">
+          {/* Background Images Row */}
+          {/* <div className="grid grid-cols-3 gap-4">
           {[1, 2, 3].map((num) => (
             <div key={num}>
               <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -175,7 +203,7 @@ const ClubRegistrationForm = () => {
                     type="file"
                     name={`backgroundImage${num}`}
                     className="hidden"
-                    onChange={handleImageChange}
+
                     accept="image/*"
                     required
                   />
@@ -183,19 +211,29 @@ const ClubRegistrationForm = () => {
               </div>
             </div>
           ))}
-        </div>
+        </div> */}
 
+        <div className='d-flex gap-5'>
         <button
           type="submit"
           className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 mt-6"
         >
           Register Club
         </button>
+
+        
+        <button
+          type="submit"
+          className="w-full bg-red-600 text-white py-2 px-4 rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 mt-6 "
+          onClick={handleReset}
+        >
+          Reset
+        </button>
+        </div>
+
         
       </form>
-      </div>
     </div>
-    
   );
 };
 

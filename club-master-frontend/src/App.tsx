@@ -3,7 +3,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom"
 
 
 import React from "react";
-import Newclub from './admin/Newclub'
+// import Newclub from './admin/Newclub'
 import Home from './pages/Home';
 import About from './pages/About';
 import Contact  from './pages/Contact';
@@ -26,7 +26,7 @@ import Rotractnews  from './Rotractclub/Rotractnews';
 import Userprofile  from './pages/Userprofile';
 import { UserProvider } from "./common/UserContext";
 import ViewMyClubs from "./pages/ViewMyClubs";
-import MainAdminDashboard from "./pages/MainAdminDashboard";
+import MainAdminDashboard from "./admin/MainAdminDashboard";
 
 
 
@@ -60,7 +60,7 @@ function App() {
       <Route path="rotractnews" element={<Rotractnews/>}/>
       <Route path="userprofile" element={<Userprofile/>}/>
       <Route path="rotractabout" element={<Rotractabout/>}/>
-      <Route path="newclub" element={<Newclub/>}/> 
+      {/* <Route path="newclub" element={<Newclub/>}/>  */}
       <Route path="myclub" element={<ViewMyClubs/>}/>
       <Route path="mainAdmin" element={<MainAdminDashboard/>}/>
       
