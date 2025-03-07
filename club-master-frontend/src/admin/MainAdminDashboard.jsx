@@ -6,6 +6,7 @@ import'./CreateMainAdmin'
 import CreateMainAdmin from './CreateMainAdmin';
 import ViewAllMainAdmin from './ViewAllMainAdmin';
 import ClubRegistrationForm from './NewClub';
+import ViewAllClubs from './ViewAllClubs';
 
 export default function MainAdminDashboard() {
   const [currentView, setCurrentView] = useState("default");
@@ -24,6 +25,8 @@ export default function MainAdminDashboard() {
         return <ViewAllMainAdmin/>;
       case 'createClub':
         return <ClubRegistrationForm/>
+      case 'viewClubs':
+        return <ViewAllClubs/>
       default:
         return (
           <div className="welcome-container">
