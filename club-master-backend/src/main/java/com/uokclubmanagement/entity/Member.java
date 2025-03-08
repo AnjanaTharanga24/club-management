@@ -29,7 +29,7 @@ public class Member {
     private String userName;
     private String password;
     private List<MemberRoleDTO> positionHoldingClubAndRoles = new ArrayList<>();
-//    private byte[] memberImage;
+    private String memberImageUrl;
 
     private List<String> associatedClubs = new ArrayList<>();
 
@@ -118,12 +118,11 @@ public class Member {
                 .collect(Collectors.toList());
     }
 
+    public String getMemberImageUrl() {
+        return memberImageUrl;
+    }
 
-//    public byte[] getMemberImage() {
-//        return memberImage;
-//    }
-//
-//    public void setMemberImage(byte[] memberImage) {
-//        this.memberImage = memberImage;
-//    }
+    public void setMemberImageUrl(String memberImageUrl) {
+        this.memberImageUrl = memberImageUrl;
+    }
 }
