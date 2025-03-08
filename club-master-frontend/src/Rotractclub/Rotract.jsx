@@ -207,15 +207,14 @@ const Rotract = () => {
         style={{ backgroundImage: `url(${images[currentImageIndex]})` }}
       >
         <div className="text-overlay">
-          <h1>
-            {club.clubVision}
+          <h1 className="p-5" style={{ width: "1800px" }}>
+          {club.clubVision}
 
-            <div className="typewriter-text2">
+            <div className="typewriter-text2 mt-4">
+               
               <Typewriter
                 words={[
-                  "urgent problems.",
-                  "critical issues.",
-                  "global crises.",
+                  "This is Our Vision"
                 ]}
                 loop={0}
                 cursor
@@ -545,7 +544,7 @@ const Rotract = () => {
           </div>
         </div>
       </div>
-      <Rotractfooter clubName={club.clubName} />
+      <Rotractfooter clubName={club.clubName} clubVision={club.clubVision} />
     </div>
   );
 };

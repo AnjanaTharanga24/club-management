@@ -1,14 +1,12 @@
-
 import React, { useState } from "react";
 import { 
   FaUsers, FaPlus, FaCalendarAlt, FaNewspaper, FaProjectDiagram, 
   FaUserShield, FaTrophy, FaUserTie, FaEdit, FaIdCard, FaTrash 
 } from "react-icons/fa";
 
+import './Adminsidebar.css';
 
-import './Adminsidebar.css'; // Updated CSS file name
-
-const Adminsidebar = () => {
+const Adminsidebar = ({ changeView }) => {
   const [selectedCategory, setSelectedCategory] = useState(null);
 
   const handleCategoryClick = (category) => {
@@ -20,8 +18,8 @@ const Adminsidebar = () => {
       case "Main Admin":
         return (
           <ul className="administrator-submenu">
-            <li><FaPlus className="submenu-icon" /> Create New Admin</li>
-            <li><FaUsers className="submenu-icon" /> View All Main Admins</li>
+            <li onClick={() => changeView('createNewAdmin')}><FaPlus className="submenu-icon" /> Create New Admin</li>
+            <li onClick={() => changeView('viewAllMainAdmin')}><FaUsers className="submenu-icon" /> View All Main Admins</li>
             <li><FaEdit className="submenu-icon" /> Update Admin Profile</li>
             <li><FaIdCard className="submenu-icon" /> Get Main Admins by ID</li>
           </ul>
@@ -29,8 +27,8 @@ const Adminsidebar = () => {
       case "Club":
         return (
           <ul className="administrator-submenu">
-            <li><FaPlus className="submenu-icon" /> <a href="/newclub">Create Club</a></li>
-            <li><FaPlus className="submenu-icon" /> View All Clubs</li>
+            <li onClick={() => changeView('createClub')}><FaPlus className="submenu-icon" /> <a>Create Club</a></li>
+            <li onClick={() => changeView('viewClubs')}><FaPlus className="submenu-icon" /> View All Clubs</li>
             <li><FaPlus className="submenu-icon" /> Update Club</li>
             <li><FaPlus className="submenu-icon" /> Delete Club</li>
             <li><FaPlus className="submenu-icon" /> Get Club by Club ID</li>
@@ -78,7 +76,7 @@ const Adminsidebar = () => {
   };
 
   return (
-    <div className="administrator-sidebar">
+    <div className="administrator-sidebar mt-5">
       <ul className="administrator-sidebar-list">
         <li 
           className="administrator-sidebar-item" 
@@ -156,4 +154,3 @@ const Adminsidebar = () => {
 };
 
 export default Adminsidebar;
-
