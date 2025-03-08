@@ -9,7 +9,9 @@ import com.uokclubmanagement.service.ClubService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -25,16 +27,17 @@ public class ClubServiceImpl implements ClubService {
     private MemberRepository memberRepository;
     @Autowired
     private SequenceGeneratorService sequenceGeneratorService;
+    @Autowired
+    private CloudinaryService cloudinaryService;
 
     @Override
-    public Club createClub(Club club) {
+    public Club createClub(Club club, MultipartFile logo, MultipartFile[] backgroundImages) throws IOException {
 
         // Check the club exist
         Optional<Club> optionalClubByName = Optional.ofNullable(clubRepository.findClubByClubName(club.getClubName()));
         if (optionalClubByName.isPresent()) {
-                throw new RuntimeException("A club with the same name already exists.");
+            throw new RuntimeException("A club with the same name already exists.");
         }
-
         // If not exist
         else {
             if (club.getClubId() == null || club.getClubId().isEmpty()) {
@@ -42,6 +45,9 @@ public class ClubServiceImpl implements ClubService {
                 String clubId = String.format("Club-%03d", seqValue);
                 club.setClubId(clubId);
             }
+
+            // Set clubImages
+            saveClubImages(club, logo, backgroundImages);
 
             return clubRepository.save(club);
         }
@@ -53,30 +59,17 @@ public class ClubServiceImpl implements ClubService {
     }
 
     @Override
-    public Club updateClubById(String clubId, Club club) {
+    public Club updateClubById(String clubId, Club club, MultipartFile newLogoFile, MultipartFile[] newBackgroundImages ) throws IOException {
         Optional<Club> existingClub = clubRepository.findById(clubId);
         // Check if existingClub is null
         if (existingClub.isEmpty()) {
             throw new RuntimeException("Club not found with id: " + clubId);
         }
-        // Update the fields
 
-        // Update the fields
-        Optional<Club> findClubByName = Optional.ofNullable(clubRepository.findClubByClubName(club.getClubName()));
-        // Check club name exists
-        if (findClubByName.isPresent()) {
-            throw new RuntimeException("A club with the same name already exists.");
-        }
-        else {
-            existingClub.get().setClubName(club.getClubName());
-        }
-        existingClub.get().setClubAddress(club.getClubAddress());
-        existingClub.get().setClubSeniorAdviser(club.getClubSeniorAdviser());
-        System.out.println("New Senior Adviser: " + existingClub.get().getClubSeniorAdviser());
-//        existingClub.get().setClubLogo(club.getClubLogo());
-//        existingClub.get().setBackgroundImage1(existingClub.get().getBackgroundImage1());
-//        existingClub.get().setBackgroundImage2(existingClub.get().getBackgroundImage2());
-//        existingClub.get().setBackgroundImage3(existingClub.get().getBackgroundImage3());
+        // Update the club fields
+        updateClubFields(existingClub.get(), club);
+        // Update clubImages
+        saveClubImages(existingClub.get(), newLogoFile, newBackgroundImages);
 
         return clubRepository.save(existingClub.get());
     }
@@ -85,10 +78,10 @@ public class ClubServiceImpl implements ClubService {
     public void deleteClubById(String clubId) {
 
         Optional<Club> deleteClub = clubRepository.findById(clubId);
-            if (deleteClub.isPresent()) {
-                clubRepository.delete(deleteClub.get());
-                System.out.println("Deleted Club with id: " + clubId);
-            }
+        if (deleteClub.isPresent()) {
+            clubRepository.delete(deleteClub.get());
+            System.out.println("Deleted Club with id: " + clubId);
+        }
         else{
             throw new RuntimeException("Club not found with id: " + clubId);
         }
@@ -202,6 +195,65 @@ public class ClubServiceImpl implements ClubService {
         }
         else {
             throw new RuntimeException("Member not found with id: " + memberId);
+        }
+    }
+
+    private void saveClubImages(Club club, MultipartFile logo, MultipartFile[] backgroundImages) throws IOException {
+
+        // Set clubLogoUrl
+        String clubLogoUrl = cloudinaryService.uploadImage(logo);
+        club.setClubLogoUrl(clubLogoUrl);
+
+        // Set backgroundImageUrl
+        List<String> backgroundImageUrl = new ArrayList<>();
+        for (int i = 0; i < 3; i++) {
+            backgroundImageUrl.add(cloudinaryService.uploadImage(backgroundImages[i]));
+        }
+
+        club.setBackgroundImageUrls(backgroundImageUrl);
+    }
+
+    private void updateClubFields(Club existingClub, Club club) {
+
+        Optional<Club> findClubByName = Optional.ofNullable(clubRepository.findClubByClubName(club.getClubName()));
+        Optional<Club> findClubByEmail = Optional.ofNullable(clubRepository.findClubByClubEmail(club.getClubEmail()));
+        Optional<Club> findClubByPhone = Optional.ofNullable(clubRepository.findClubByClubPhone(club.getClubPhone()));
+
+        // Check club name / email / phone number exists
+        if (findClubByName.isPresent()) {
+            throw new RuntimeException("A club with the same name already exists.");
+        }
+        else {
+            if(club.getClubName()!= null) {
+                existingClub.setClubName(club.getClubName());
+            }
+        }
+        if (findClubByEmail.isPresent()) {
+            throw new RuntimeException("A club with the same email already exists.");
+        }
+        else {
+            if(club.getClubEmail() != null) {
+                existingClub.setClubEmail(club.getClubEmail());
+            }
+        }
+        if (findClubByPhone.isPresent()) {
+            throw new RuntimeException("A club with the same phone number already exists.");
+        }
+        else {
+            if(club.getClubPhone() != null) {
+                existingClub.setClubPhone(club.getClubPhone());
+            }
+        }
+
+        // Update other fields
+        if (club.getClubAddress() != null) {
+            existingClub.setClubAddress(club.getClubAddress());
+        }
+        if (club.getClubSeniorAdviser() != null) {
+            existingClub.setClubSeniorAdviser(club.getClubSeniorAdviser());
+        }
+        if (club.getClubDescription() != null){
+            existingClub.setClubDescription(club.getClubDescription());
         }
     }
 }
