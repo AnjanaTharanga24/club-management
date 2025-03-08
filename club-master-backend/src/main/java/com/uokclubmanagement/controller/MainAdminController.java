@@ -11,6 +11,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/mainAdmin")
+@CrossOrigin(origins = "http://localhost:5173")
 public class MainAdminController {
 
     @Autowired
