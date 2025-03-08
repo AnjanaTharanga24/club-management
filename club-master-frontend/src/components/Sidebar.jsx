@@ -1,5 +1,5 @@
 import React from "react";
-import { FaUsers, FaPlus, FaCalendarAlt, FaNewspaper, FaCalendar } from "react-icons/fa";
+import { FaUsers, FaCalendarAlt, FaNewspaper, FaCalendar, FaTachometerAlt } from "react-icons/fa";
 import { Link } from "react-router-dom"; // Import Link
 import './Sidebar.css';
 
@@ -7,17 +7,18 @@ const Sidebar = () => {
   return (
     <div className="sidebar">
       <ul>
+      <li>
+          <Link to="/clubHome" className="sidebar-link">
+            <FaTachometerAlt className="icon" /> Dashboard
+          </Link>
+        </li>
         
         <li>
           <Link to="/myclub" className="sidebar-link">
             <FaUsers className="icon" /> My Clubs
           </Link>
         </li>
-        <li>
-          <Link to="/join-new-club" className="sidebar-link">
-            <FaPlus className="icon" /> Join New Club
-          </Link>
-        </li>
+        
         <li>
           <Link to="/events" className="sidebar-link">
             <FaCalendarAlt className="icon" /> Events

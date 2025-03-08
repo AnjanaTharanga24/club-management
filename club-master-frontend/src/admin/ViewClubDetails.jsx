@@ -82,7 +82,7 @@ export default function ClubDetails({ clubId }) {
     <div className="club-details-container">
       <div className="club-details-header">
         <div className="club-details-banner">
-          <span className="club-id">#{club.clubId}</span>
+          <span className="club-id-text">#{club.clubId}</span>
           <h1 className="club-name">{club.clubName}</h1>
           <div className="club-actions">
             <button 

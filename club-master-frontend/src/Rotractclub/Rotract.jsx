@@ -204,6 +204,7 @@ const Rotract = () => {
         clubEventPage={`/rotractevent?clubId=${club.clubId}&clubName=${club.clubName}`}
         clubLogoUrl={club.clubLogoUrl}
         clubName={club.clubName}
+        clubId={club.clubId}
       />
 
       {/* Background Section */}
