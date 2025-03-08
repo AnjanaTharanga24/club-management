@@ -3,6 +3,7 @@ import "./RotractFooter.css"; // Updated file name to match convention
 import { Link } from "react-router-dom";
 
 const Rotractfooter = ({clubName,clubVision}) => {
+
   return (
     <footer className="rotract-footer">
       <div className="rotract-footer-columns">
