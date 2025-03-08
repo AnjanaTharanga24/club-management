@@ -138,7 +138,6 @@ public class ClubAdminServiceImpl implements ClubAdminService {
         }
 
         clubAdminRepository.delete(optionalClubAdmin.get());
-
     }
 }
 
