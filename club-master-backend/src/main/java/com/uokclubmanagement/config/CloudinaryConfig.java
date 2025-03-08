@@ -35,5 +35,4 @@ public class CloudinaryConfig {
             throw e;
         }
     }
-
 }
