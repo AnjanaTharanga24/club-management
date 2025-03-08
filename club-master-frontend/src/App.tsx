@@ -27,6 +27,7 @@ import Userprofile  from './pages/Userprofile';
 import { UserProvider } from "./common/UserContext";
 import ViewMyClubs from "./pages/ViewMyClubs";
 import MainAdminDashboard from "./admin/MainAdminDashboard";
+import Clubadmin from "./components/Clubadmin";
 // import ViewMyEvents from "./pages/ViewMyEvents";
 
 
