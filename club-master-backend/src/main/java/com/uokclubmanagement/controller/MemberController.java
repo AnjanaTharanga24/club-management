@@ -35,12 +35,12 @@ public class MemberController {
     private MemberRepository memberRepository;
 
     @PostMapping("/save")
-    public Member save(@RequestBody Member member) {
+    public Member saveMember(@RequestBody Member member) {
             return memberService.createMember(member);
     }
 
     @GetMapping("/all")
-    public List<Member> getAll() {
+    public List<Member> getAllMembers() {
         return memberService.getAllMembers();
     }
 
