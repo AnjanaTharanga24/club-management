@@ -51,7 +51,7 @@ body {
   position: relative;
   border-radius: 0 0 30px 30px;
   color: white;
-  box-shadow: 0 15px 30px rgba(83, 109, 254, 0.3);
+  /* box-shadow: 0 15px 30px rgba(83, 109, 254, 0.3); */
   overflow: hidden;
 }
 
