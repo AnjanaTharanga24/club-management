@@ -7,31 +7,12 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import { FaUsers } from "react-icons/fa";
 
-// Map club names to specific background images
-const clubBackgroundImages = {
-  // social: ["/social1.jpg", "/social2.jpg", "/social3.jpg"],
-  // pmat: ["/pmat1.jpg", "/pmat2.jpg", "/pmat3.jpg"],
-  // stat: ["/stat1.jpg", "/stat2.jpg", "/stat3.jpg"],
-  // anima: ["/anima1.jpg", "/anima2.jpg", "/anima3.jpg"],
-  // cloud: ["/cloud1.jpg", "/cloud2.jpg", "/cloud3.jpg"]
-};
-
-const defaultBgImages = ["/1.jpg", "/2.jpg", "/3.jpg"];
-
-const clubLogos = {
-  // social: "/leologo.png",
-  // pmat: "/rotractlogo.png",
-  // stat: "/isaclogo.png",
-  // anima: "/leologo.png",
-  // cloud: "/leologo.png",
-  default: "/leologo.png" 
-};
-
+// ClubCard component that uses club data from API
 const ClubCard = ({ club }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   
-  const clubName = club.clubName.toLowerCase();
-  const bgImages = clubBackgroundImages[clubName] || defaultBgImages;
+  // Use the backgroundImageUrls from the API response
+  const bgImages = club.backgroundImageUrls || ["/1.jpg", "/2.jpg", "/3.jpg"];
   
   useEffect(() => {
     const interval = setInterval(() => {
@@ -40,7 +21,8 @@ const ClubCard = ({ club }) => {
     return () => clearInterval(interval);
   }, [bgImages.length]);
 
-  const logo = clubLogos[clubName] || clubLogos.default;
+  // Use the clubLogoUrl from the API response
+  const logo = club.clubLogoUrl || "/leologo.png";
 
   return (
     <div

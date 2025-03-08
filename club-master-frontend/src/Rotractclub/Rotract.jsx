@@ -7,8 +7,6 @@ import axios from "axios";
 import { Link, useSearchParams } from "react-router-dom";
 
 const Rotract = () => {
-  const images = ["/r100.jpg", "/r101.jpg", "/r102.jpg", "/r103.jpg"];
-
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [alternateImage, setAlternateImage] = useState("revent2.jpg");
   const [isImpactVisible, setIsImpactVisible] = useState(false);
@@ -17,7 +15,7 @@ const Rotract = () => {
   const [searchParams] = useSearchParams();
   const clubId = searchParams.get("clubId");
   const [club, setClub] = useState({});
-  const [project, setProjects] = useState({});
+  const [project, setProjects] = useState([]);
   const [awards, setAwards] = useState([]);
   const [currentAwardIndex, setCurrentAwardIndex] = useState(0);
 
@@ -67,10 +65,18 @@ const Rotract = () => {
 
   useEffect(() => {
     // Image carousel effect
-    const intervalId = setInterval(() => {
-      setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
-    }, 3000);
+    if (club.backgroundImageUrls && club.backgroundImageUrls.length > 0) {
+      const intervalId = setInterval(() => {
+        setCurrentImageIndex(
+          (prevIndex) => (prevIndex + 1) % club.backgroundImageUrls.length
+        );
+      }, 3000);
 
+      return () => clearInterval(intervalId);
+    }
+  }, [club.backgroundImageUrls]);
+
+  useEffect(() => {
     // Alternate image toggling
     const alternateInterval = setInterval(() => {
       setAlternateImage((prevImage) =>
@@ -78,11 +84,8 @@ const Rotract = () => {
       );
     }, 2000);
 
-    return () => {
-      clearInterval(intervalId);
-      clearInterval(alternateInterval);
-    };
-  }, [images.length]);
+    return () => clearInterval(alternateInterval);
+  }, []);
 
   useEffect(() => {
     // Intersection Observer for animations
@@ -155,7 +158,7 @@ const Rotract = () => {
       title: "Club Service",
       description:
         "We work together to strengthen fellowship among our members through continuous and coordinated teamwork.",
-      icon: "/rr1.png", // Replace with your actual icon path
+      icon: "/rr1.png",
     },
     {
       title: "Community Service",
@@ -192,41 +195,43 @@ const Rotract = () => {
     }, 3000);
 
     return () => clearInterval(awardTimer);
-  }, []);
+  }, [awards]);
 
   return (
     <div>
       <Rotractnav
         clubNewsPage={`/rotractnews?clubId=${club.clubId}&clubName=${club.clubName}`}
         clubEventPage={`/rotractevent?clubId=${club.clubId}&clubName=${club.clubName}`}
+        clubLogoUrl={club.clubLogoUrl}
+        clubName={club.clubName}
       />
 
       {/* Background Section */}
-      <div
-        className="background-container"
-        style={{ backgroundImage: `url(${images[currentImageIndex]})` }}
-      >
-        <div className="text-overlay">
-          <h1 className="p-5" style={{ width: "1800px" }}>
-          {club.clubVision}
-
-            <div className="typewriter-text2 mt-4">
-               
-              <Typewriter
-                words={[
-                  "This is Our Vision"
-                ]}
-                loop={0}
-                cursor
-                cursorStyle="|"
-                typeSpeed={200}
-                deleteSpeed={50}
-                delaySpeed={1000}
-              />
-            </div>
-          </h1>
+      {club.backgroundImageUrls && club.backgroundImageUrls.length > 0 && (
+        <div
+          className="background-container"
+          style={{
+            backgroundImage: `url(${club.backgroundImageUrls[currentImageIndex]})`,
+          }}
+        >
+          <div className="text-overlay">
+            <h1 className="p-5" style={{ width: "1800px" }}>
+              {club.clubVision}
+              <div className="typewriter-text2 mt-4">
+                <Typewriter
+                  words={["This is Our Vision"]}
+                  loop={0}
+                  cursor
+                  cursorStyle="|"
+                  typeSpeed={200}
+                  deleteSpeed={50}
+                  delaySpeed={1000}
+                />
+              </div>
+            </h1>
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Interface Below the Background */}
       <div className="interface-container">
@@ -268,6 +273,7 @@ const Rotract = () => {
           </div>
         </div>
       </div>
+
       {/* Main Avenues Interface */}
       <div className="avenues-container">
         <h2>Main Avenues</h2>
@@ -285,8 +291,8 @@ const Rotract = () => {
           ))}
         </div>
       </div>
-      {/* project interface*/}
 
+      {/* Project Interface */}
       <section className="pg-container">
         <header className="pg-header">
           <h2 className="pg-title">Latest Projects</h2>
@@ -294,7 +300,7 @@ const Rotract = () => {
         </header>
 
         {project.length > 0 ? (
-          <div className="pg-grid  ">
+          <div className="pg-grid">
             {project.map((project, index) => (
               <article className="pg-card p-3 shadow" key={index}>
                 <div className="pg-card-media">
@@ -382,7 +388,7 @@ const Rotract = () => {
         )}
       </section>
 
-      {/* report interface*/}
+      {/* Report Interface */}
       <div className="report-container animate-on-scroll">
         {/* Left section with text */}
         <div className="report-left-section">
@@ -396,14 +402,11 @@ const Rotract = () => {
           </p>
           <p>
             Explore how young leaders are driving positive change, fostering
-            connections, and making a difference in communities across the
-            globe.
+            connections, and making a difference in communities across the globe.
           </p>
-          {/* <button className="report-button" onClick={() => window.location.href = 'link-to-your-report.pdf'}>Click here</button> */}
-
           <a
             href={`/rotractnews?clubId=${club.clubId}&clubName=${club.clubName}`}
-            className=" report-button"
+            className="report-button"
           >
             Click here
           </a>
@@ -414,8 +417,8 @@ const Rotract = () => {
           <img src="Annualrotract.jpg" alt="Annual Report" />
         </div>
       </div>
-      {/* rotract events */}
 
+      {/* Rotract Events */}
       <div className="revent-container animate-on-scroll">
         {/* Left Side: Text Content */}
         <div className="revent-text-section">
@@ -423,7 +426,6 @@ const Rotract = () => {
             See what's new on the RACUOK{" "}
             <span className="red-text">EVENTS!</span>
           </h1>
-
           <p>
             Explore our dynamic content showcasing the impact of passionate
             individuals and their journey towards positive transformation.
@@ -450,6 +452,8 @@ const Rotract = () => {
           />
         </div>
       </div>
+
+      {/* Awards Section */}
       <div className="awards-section animate-on-scroll">
         <h2>Our Awards & Recognition</h2>
         <div className="carousel-container">
@@ -491,7 +495,6 @@ const Rotract = () => {
         </div>
       </div>
 
-      {/* Executive bord */}
       {/* Executive Board */}
       <div className="executive-board-container">
         <div className="board-header">
@@ -544,6 +547,7 @@ const Rotract = () => {
           </div>
         </div>
       </div>
+
       <Rotractfooter clubName={club.clubName} clubVision={club.clubVision} />
     </div>
   );
