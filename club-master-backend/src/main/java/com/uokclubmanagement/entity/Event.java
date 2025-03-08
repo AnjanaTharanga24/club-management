@@ -21,10 +21,9 @@ public class Event extends ContentSchedule {
     private String eventLocation;
     private LocalDate scheduledDate;
     private LocalTime scheduledTime;
+    private String eventImageUrl;
+
     private Like like = new Like();
-
-//    private byte[] eventImage;
-
     private List<String> comments = new ArrayList<>();
 
     public Event() {}
@@ -61,15 +60,6 @@ public class Event extends ContentSchedule {
         this.eventLocation = eventLocation;
     }
 
-//    public byte[] getEventImage() {
-//        return eventImage;
-//    }
-//
-//    public void setEventImage(byte[] eventImage) {
-//        this.eventImage = eventImage;
-//    }
-
-
     public LocalDate getScheduledDate() {
         return scheduledDate;
     }
@@ -84,6 +74,14 @@ public class Event extends ContentSchedule {
 
     public void setScheduledTime(LocalTime scheduledTime) {
         this.scheduledTime = scheduledTime;
+    }
+
+    public String getEventImageUrl() {
+        return eventImageUrl;
+    }
+
+    public void setEventImageUrl(String eventImageUrl) {
+        this.eventImageUrl = eventImageUrl;
     }
 
     public Like getLike() {
