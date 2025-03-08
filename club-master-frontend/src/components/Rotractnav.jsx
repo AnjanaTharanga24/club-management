@@ -1,9 +1,59 @@
-import React, { useState, useEffect } from "react";
+import axios from "axios";
+import React, { useState, useEffect, useContext } from "react";
+import { UserContext } from "../common/UserContext";
+import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 
-const Rotractnav = ({ clubEventPage, clubNewsPage, clubLogoUrl, clubName }) => {
+const Rotractnav = ({
+  clubEventPage,
+  clubNewsPage,
+  clubLogoUrl,
+  clubName,
+  clubId,
+}) => {
   const [isScrolled, setIsScrolled] = useState(false);
+  const navigate = useNavigate();
+  const { user } = useContext(UserContext);
 
-  // Add scroll event listener
+  const handleUnEnroll = async () => {
+    try {
+      const result = await Swal.fire({
+        title: 'Are you sure?',
+        text: 'You are about to unenroll from this club. This action cannot be undone.',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, unenroll!',
+        cancelButtonText: 'Cancel',
+      });
+  
+      if (result.isConfirmed) {
+        const response = await axios.delete(
+          `http://localhost:7000/api/v1/club/${user.id}/unroll-member/${clubId}`
+        );
+        console.log(response.data);
+  
+        await Swal.fire({
+          title: 'Unenrolled!',
+          text: 'You have been successfully unenrolled from the club.',
+          icon: 'success',
+        });
+
+        navigate('/clubHome');
+      }
+    } catch (error) {
+      console.log('Error while unenrolling member', error);
+  
+      await Swal.fire({
+        title: 'Error!',
+        text: 'An error occurred while unenrolling. Please try again.',
+        icon: 'error',
+        confirmButtonText: 'OK',
+      });
+    }
+  };
+
   useEffect(() => {
     const handleScroll = () => {
       if (window.scrollY > 50) {
@@ -15,7 +65,6 @@ const Rotractnav = ({ clubEventPage, clubNewsPage, clubLogoUrl, clubName }) => {
 
     window.addEventListener("scroll", handleScroll);
 
-    // Clean up the event listener
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
@@ -86,9 +135,22 @@ const Rotractnav = ({ clubEventPage, clubNewsPage, clubLogoUrl, clubName }) => {
             >
               Contact
             </a>
+            <a
+              className={`transition duration-300 text-lg font-medium ${
+                isScrolled
+                  ? "text-white hover:text-blue-200"
+                  : "text-gray-800 hover:text-blue-600"
+              }`}
+              href="/clubHome"
+            >
+              Clubs
+            </a>
           </div>
 
-          <div className=" hidden md:flex items-center space-x-4" style={{ marginRight: "-100px" }}>
+          <div
+            className=" hidden md:flex items-center space-x-4"
+            style={{ marginRight: "-100px" }}
+          >
             <a
               className={`transition duration-300 px-5 py-3 rounded-full text-lg font-medium flex items-center ${
                 isScrolled
@@ -117,7 +179,7 @@ const Rotractnav = ({ clubEventPage, clubNewsPage, clubLogoUrl, clubName }) => {
                   : "bg-red-500 text-white hover:bg-red-600 shadow-md hover:shadow-lg"
               }`}
               onClick={() => {
-                console.log("Unenroll clicked");
+                handleUnEnroll();
               }}
             >
               <span>Unenroll</span>
