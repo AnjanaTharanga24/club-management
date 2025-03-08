@@ -142,7 +142,7 @@ const Navbar = () => {
                       {user.role === "MEMBER" && (
                         <a
                           className="block px-4 py-2 text-sm text-white hover:bg-gray-700 transition duration-200"
-                          href="/userprofile"
+                          href="/clubHome"
                         >
                           Member dashboard
                         </a>
@@ -151,9 +151,9 @@ const Navbar = () => {
                       {user.role === "CLUB_ADMIN" && (
                         <a
                           className="block px-4 py-2 text-sm text-white hover:bg-gray-700 transition duration-200"
-                          href="/userprofile"
+                          href="/clubAdmin"
                         >
-                          Club dashboard
+                          Club Admin dashboard
                         </a>
                       )}
 
