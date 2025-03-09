@@ -9,6 +9,7 @@ import com.uokclubmanagement.repository.MemberRepository;
 import com.uokclubmanagement.service.MainAdminService;
 import com.uokclubmanagement.utills.UpdateEmailUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -64,6 +65,11 @@ public class MainAdminServiceImpl implements MainAdminService {
             String mainAdminId = String.format("Adm-%04d", seqValue);
             mainAdmin.setMainAdminId(mainAdminId);
 
+            // Encode password
+            BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+            String encodedPassword = bCryptPasswordEncoder.encode(mainAdmin.getMainAdminPassword());
+            mainAdmin.setMainAdminPassword(encodedPassword);
+
          }
             return mainAdminRepository.save(mainAdmin);
         }
@@ -109,7 +115,9 @@ public class MainAdminServiceImpl implements MainAdminService {
             existingMainAdmin.setMainAdminPhone(mainAdmin.getMainAdminPhone());
         }
         if (mainAdmin.getMainAdminPassword() != null) {
-            existingMainAdmin.setMainAdminPassword(mainAdmin.getMainAdminPassword());
+            BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+            String newEncodedPassword = bCryptPasswordEncoder.encode(mainAdmin.getMainAdminPassword());
+            existingMainAdmin.setMainAdminPassword(newEncodedPassword);
         }
 
         if(mainAdminImage != null && !mainAdminImage.isEmpty()){
