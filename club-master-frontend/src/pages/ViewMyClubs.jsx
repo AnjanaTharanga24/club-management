@@ -115,8 +115,8 @@ export default function ViewMyClubs() {
     <div className="app-container">
       <Navbar />
       <Sidebar />
-      <div className="main-content">
-        <div className="clubs-header">
+      <div className="main-content ">
+        <div className="clubs-header mt-3 ">
           <div>
             <h1>My Clubs</h1>
             <p className="subtitle">Explore and manage your club memberships</p>
