@@ -59,7 +59,7 @@ const Sidebar = () => {
         </li>
 
         <li className="sidebar-item">
-          <Link to="/news" className="sidebar-link">
+          <Link to="/myAllMyNews" className="sidebar-link">
             <FaNewspaper className="icon" /> News
           </Link>
         </li>
