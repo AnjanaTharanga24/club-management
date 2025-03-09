@@ -84,7 +84,6 @@ export default function ViewAllClubs({ changeView }) {
                   <div className="club-card h-100">
                     <div className="club-card-header">
                       <h2 className="club-name">{club.clubName}</h2>
-                      <span className="club-id-text">ID: {club.clubId}</span>
                     </div>
                     <div className="club-card-body">
                       <div className="club-info-item">
