@@ -9,6 +9,7 @@ import com.uokclubmanagement.repository.MemberRepository;
 import com.uokclubmanagement.service.MemberService;
 import com.uokclubmanagement.utills.UpdateEmailUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -62,6 +63,10 @@ public class MemberServiceImpl implements MemberService {
             long seqValue = sequenceGeneratorService.generateSequence("Member Sequence");
             String memberId = String.format("Mem-%05d", seqValue);
             member.setMemberId(memberId);
+
+            BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder(8);
+            String encodedPassword = bCryptPasswordEncoder.encode(member.getPassword());
+            member.setPassword(encodedPassword);
             }
             return memberRepository.save(member);
         }
@@ -129,7 +134,9 @@ public class MemberServiceImpl implements MemberService {
             existingMember.setPhoneNo(member.getPhoneNo());
         }
         if (member.getPassword() != null) {
-            existingMember.setPassword(member.getPassword());
+            BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+            String newEncodedPassword = bCryptPasswordEncoder.encode(member.getPassword());
+            existingMember.setPassword(newEncodedPassword);
         }
 
         if(memberImage != null && !memberImage.isEmpty()){
