@@ -307,7 +307,7 @@ const RotracEvent = () => {
                         {/* Event Image */}
                         <div className="w-full aspect-video bg-gray-700/50 rounded-xl flex items-center justify-center text-cyan-100 overflow-hidden">
                           <img
-                            src="/bloodeventroc.jpg"
+                            src={event.eventImageUrl}
                             alt={event.eventName}
                             className="w-full h-full object-cover"
                           />
