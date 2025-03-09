@@ -45,12 +45,12 @@ const Sidebar = () => {
                 </Link>
               </li>
               <li className="submenu-item">
-                <Link to="/upcoming-events" className="submenu-link">
+                <Link to="/myAllUpcomingEvents" className="submenu-link">
                   Upcoming Events
                 </Link>
               </li>
               <li className="submenu-item">
-                <Link to="/past-events" className="submenu-link">
+                <Link to="/myAllPastEvents" className="submenu-link">
                   Past Events
                 </Link>
               </li>
