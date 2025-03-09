@@ -1,13 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
 import { FaUsers, FaPlus, FaCalendarAlt, FaNewspaper, FaCalendar, FaEdit, FaCog } from "react-icons/fa";
 
-import './Clubadmin.css'; // Ensure the CSS file matches the new name and structure
+import './Clubadmin.css'; 
 
-const Clubadmin = () => {
+const Clubadmin = ({changeView}) => {
+      const [selectedCategory, setSelectedCategory] = useState(null);
   return (
     <div className="admin-sidebar">
       <ul className="admin-sidebar-list">
-        <li className="admin-sidebar-item"><FaUsers className="admin-icon" /> Manage Clubs</li>
+        <li className="admin-sidebar-item" onClick={() => changeView('viewAllClubAdmin')}><FaUsers className="admin-icon" /> Manage Clubs</li>
+        <li className="admin-sidebar-item" onClick={() => changeView('createClubAdmin')}><FaPlus className="admin-icon" /> Add Club Admin</li>
         <li className="admin-sidebar-item"><FaPlus className="admin-icon" /> Add Club</li>
         <li className="admin-sidebar-item"><FaCalendarAlt className="admin-icon" /> Events</li>
         <li className="admin-sidebar-item"><FaEdit className="admin-icon" /> Manage Posts</li>

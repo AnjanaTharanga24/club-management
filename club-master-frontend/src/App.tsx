@@ -27,7 +27,8 @@ import Userprofile  from './pages/Userprofile';
 import { UserProvider } from "./common/UserContext";
 import ViewMyClubs from "./pages/ViewMyClubs";
 import MainAdminDashboard from "./admin/MainAdminDashboard";
-import Clubadmin from "./components/Clubadmin";
+// import Clubadmin from "./components/Clubadmin";
+import ClubAdminDashboard from "./club-admin/ClubAdminDashboard";
 // import ViewMyEvents from "./pages/ViewMyEvents";
 
 
@@ -55,7 +56,7 @@ function App() {
       {/* <Route path="adminsidebar" element={<Adminsidebar/>}/> */}
       <Route path="rotract" element={<Rotract/>}/>
       <Route path="leologin" element={<Leologin/>}/>
-      <Route path="clubadmin" element={<Clubadmin/>}/>
+      {/* <Route path="clubadmin" element={<Clubadmin/>}/> */}
       <Route path="isacalogin" element={<Isacalogin/>}/>
       <Route path="rotractcontact" element={<Rotractcontact/>}/>
       <Route path="rotractevent" element={<Rotractevent/>}/>
@@ -66,6 +67,8 @@ function App() {
       <Route path="myclub" element={<ViewMyClubs/>}/>
       <Route path="mainAdmin" element={<MainAdminDashboard/>}/>
       {/* <Route path="myOnGoingEvents" element={<ViewMyOngoingEvents/>}/> */}
+      <Route path="clubAdmin" element={<ClubAdminDashboard/>}/>
+
      
      </Routes>
     </BrowserRouter>
