@@ -19,6 +19,7 @@ public class ClubAdmin{
     @Indexed(unique = true)
     private String username;
     private String password;
+    private String imageUrl;
 
     public ClubAdmin() {}
 
@@ -76,5 +77,13 @@ public class ClubAdmin{
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 }

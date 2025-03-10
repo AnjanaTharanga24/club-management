@@ -103,8 +103,10 @@ public class MemberServiceImpl implements MemberService {
         Optional<ClubAdmin> optionalClubAdmin = Optional.ofNullable(clubAdminRepository.findClubAdminByMemberId(memberId));
         if (optionalClubAdmin.isPresent()) {
             ClubAdmin clubAdmin = optionalClubAdmin.get();
-            // Update clubAdmin fullName
+            // Update clubAdmin fields
             clubAdmin.setFullName(member.getFirstName()+" "+member.getLastName());
+            clubAdmin.setEmail(member.getEmail());
+            clubAdmin.setImageUrl(member.getMemberImageUrl());
             clubAdminRepository.save(clubAdmin);
         }
 
