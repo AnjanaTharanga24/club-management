@@ -52,13 +52,22 @@ const Navbar = () => {
               Contact
             </a>
 
-            {user && (
+            {/* {user.role === "MEMBER" && (
                <a
                className="text-gray-50 hover:text-gray-400 transition duration-300"
                href="/clubhome"
              >
                Clubs
              </a>
+            )} */}
+
+            {user?.role === "MEMBER" && (
+              <a
+                className="block px-4 py-2 text-sm text-white hover:bg-gray-700 transition duration-200"
+                href="/clubHome"
+              >
+                Clubs
+              </a>
             )}
           </div>
 

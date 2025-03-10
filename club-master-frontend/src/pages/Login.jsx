@@ -15,41 +15,41 @@ const Login = () => {
 
   const handleLogin = async () => {
     try {
-      const response = await axios.post("http://localhost:7000/api/v1/login", {
-        username,
-        password,
-      });
-      console.log(response.data);
-      setUser(response.data);
-      Swal.fire({
-        title: "Welcome Back!",
-        text: "Login successful",
-        icon: "success",
-        timer: 1500,
-        showConfirmButton: false,
-        background: "#fff",
-        customClass: {
-          popup: "swal-popup",
-        },
-      }).then(() => {
-        navigate("/");
-      });
+        const response = await axios.post("http://localhost:7000/api/v1/login", {
+            username,
+            password,
+        });
+        console.log(response.data);
+        setUser(response.data);
+        Swal.fire({
+            title: "Welcome Back!",
+            text: "Login successful",
+            icon: "success",
+            timer: 1500,
+            showConfirmButton: false,
+            background: "#fff",
+            customClass: {
+                popup: "swal-popup",
+            },
+        }).then(() => {
+            navigate("/");
+        });
     } catch (error) {
-      console.log("error while login", error);
-      Swal.fire({
-        title: "Login Failed",
-        text: error.response?.data || "Something went wrong. Please try again.",
-        icon: "error",
-        confirmButtonText: "Try Again",
-        confirmButtonColor: "#d33",
-        background: "#fff",
-        customClass: {
-          title: "swal-title",
-          popup: "swal-popup",
-        },
-      });
+        console.log("error while login", error);
+        Swal.fire({
+            title: "Login Failed",
+            text: error.response?.data || "Something went wrong. Please try again.",
+            icon: "error",
+            confirmButtonText: "Try Again",
+            confirmButtonColor: "#d33",
+            background: "#fff",
+            customClass: {
+                title: "swal-title",
+                popup: "swal-popup",
+            },
+        });
     }
-  };
+};
 
   return (
     <div>

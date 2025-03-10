@@ -1,65 +1,34 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { User, Mail, Building, Plus, Trash2 } from 'lucide-react';
+import { UserContext } from "../common/UserContext";
+import axios from 'axios';
 
 export default function ViewAllClubAdmin() {
   const [clubAdmins, setClubAdmins] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
+  const { user } = useContext(UserContext);
+
+  // Extract clubId from user.id
+  const clubId = user?.id?.split(':')[0];
+
+  console.log(clubId);
+
   useEffect(() => {
-    setTimeout(() => {
-      setClubAdmins([
-        {
-          clubAdminId: "ca1",
-          clubId: "c1",
-          memberId: "m1",
-          fullName: "John Doe",
-          email: "john.doe@example.com",
-          username: "johndoe"
-        },
-        {
-          clubAdminId: "ca2",
-          clubId: "c2",
-          memberId: "m2",
-          fullName: "Jane Smith",
-          email: "jane.smith@example.com",
-          username: "janesmith"
-        },
-        {
-          clubAdminId: "ca3",
-          clubId: "c1",
-          memberId: "m3",
-          fullName: "Robert Johnson",
-          email: "robert.j@example.com",
-          username: "robertj"
-        },
-        {
-          clubAdminId: "ca4",
-          clubId: "c3",
-          memberId: "m4",
-          fullName: "Sarah Williams",
-          email: "sarah.w@example.com",
-          username: "sarahw"
-        },
-        {
-          clubAdminId: "ca5",
-          clubId: "c2",
-          memberId: "m5",
-          fullName: "Michael Brown",
-          email: "michael.b@example.com",
-          username: "michaelb"
-        },
-        {
-          clubAdminId: "ca6",
-          clubId: "c3",
-          memberId: "m6",
-          fullName: "Emily Davis",
-          email: "emily.d@example.com",
-          username: "emilyd"
-        }
-      ]);
-      setIsLoading(false);
-    }, 1000);
+    getALlClubAdmin();
   }, []);
+
+  const getALlClubAdmin = async () => {
+    try {
+      const response = await axios.get(`http://localhost:7000/api/v1/clubAdmin/allClubsAdmins/${clubId}`);
+      console.log(response.data);
+      setClubAdmins(response.data);
+      setIsLoading(false); // Set loading to false after data is fetched
+    } catch (error) {
+      console.log("Error while getting all admins", error);
+      setIsLoading(false); // Set loading to false even if there's an error
+    }
+  };
 
   const getInitials = (name) => {
     return name
@@ -88,7 +57,7 @@ export default function ViewAllClubAdmin() {
 
   const handleCardClick = (admin) => {
     console.log(`Viewing details for: ${admin.fullName}`);
-
+    // Add logic to view admin details (e.g., navigate to a details page)
   };
 
   return (
@@ -98,10 +67,7 @@ export default function ViewAllClubAdmin() {
           <h1 className="text-3xl font-bold text-gray-800 mb-2">Club Administrators</h1>
           <p className="text-gray-600">Manage your club's administrative team</p>
         </div>
-        <button className="px-5 py-3 bg-indigo-600 text-white rounded-lg shadow-lg hover:bg-indigo-700 transition flex items-center gap-2">
-          <Plus className="h-5 w-5" />
-          Add New Admin
-        </button>
+      
       </div>
 
       {isLoading ? (
@@ -119,20 +85,16 @@ export default function ViewAllClubAdmin() {
                 className="bg-white rounded-2xl shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 border border-gray-100 cursor-pointer relative"
                 onClick={() => handleCardClick(admin)}
               >
-    
-                <button 
-                  className="absolute top-3 right-3 z-10 p-2 bg-red-500 text-white rounded-full hover:bg-red-600 transition shadow-md"
-                  onClick={(e) => handleDelete(admin.clubAdminId, e)}
-                >
-                  <Trash2 className="h-5 w-5" />
-                </button>
                 
+                
+                {/* Avatar Section */}
                 <div className="bg-gradient-to-r from-indigo-500 to-purple-600 h-20 relative">
                   <div className={`${avatarColor} w-16 h-16 rounded-full flex items-center justify-center text-xl font-bold text-white absolute -bottom-8 left-6 border-4 border-white shadow-md`}>
                     {getInitials(admin.fullName)}
                   </div>
                 </div>
                 
+                {/* Admin Details Section */}
                 <div className="p-6 pt-12">
                   <h2 className="text-xl font-bold text-gray-800 mb-1">{admin.fullName}</h2>
                   <p className="text-indigo-600 font-medium mb-4">Club Admin</p>
@@ -155,6 +117,7 @@ export default function ViewAllClubAdmin() {
                   </div>
                 </div>
                 
+                {/* Footer Section */}
                 <div className="border-t border-gray-100 p-4 bg-gray-50">
                   <span className="text-sm text-gray-500">Member ID: {admin.memberId}</span>
                 </div>

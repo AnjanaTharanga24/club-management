@@ -415,7 +415,7 @@ const Rotract = () => {
 
         {/* Right section with image */}
         <div className="report-right-section">
-          <img src="Annualrotract.jpg" alt="Annual Report" />
+          <img src="/uu.jpg" alt="Annual Report"  />
         </div>
       </div>
 
@@ -447,7 +447,7 @@ const Rotract = () => {
         {/* Right Side: Images */}
         <div className="revent-image-section">
           <img
-            src={alternateImage}
+            src="/102.jpg"
             alt="Alternate Event"
             className="revent-image"
           />
@@ -549,7 +549,7 @@ const Rotract = () => {
         </div>
       </div>
 
-      <Rotractfooter clubName={club.clubName} clubVision={club.clubVision} />
+      <Rotractfooter clubEmail={club.clubEmail} clubImage={club.clubLogoUrl} clubName={club.clubName} clubVision={club.clubVision} />
     </div>
   );
 };
