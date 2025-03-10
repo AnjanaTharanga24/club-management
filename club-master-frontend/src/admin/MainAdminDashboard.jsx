@@ -8,6 +8,9 @@ import ViewAllMainAdmin from './ViewAllMainAdmin';
 import ClubRegistrationForm from './NewClub';
 import ViewAllClubs from './ViewAllClubs';
 import ViewClubDetails from './ViewClubDetails';
+import UserHelp from './UserHelp';
+import ExecutivePanel from './ExecutivePanel';
+import ViewAllEvents from './ViewAllEvents';
 
 export default function MainAdminDashboard() {
   const [currentView, setCurrentView] = useState("default");
@@ -34,6 +37,12 @@ export default function MainAdminDashboard() {
         return <ViewAllClubs changeView={changeView}/>
       case 'viewClub':
         return <ViewClubDetails clubId={selectedClubId} />
+      case 'userHelp':
+        return <UserHelp/>
+      case 'exPanel':
+        return <ExecutivePanel/>
+      case 'viewEvents':
+        return <ViewAllEvents/>
       default:
         return (
           <div className="welcome-container">
