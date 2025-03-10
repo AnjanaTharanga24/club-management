@@ -38,6 +38,8 @@ export default function ClubAdminDashboard() {
             return <ViewClubAdminAwards/>
           case 'viewProfile':
             return <ClubAdminProfile/>
+  
+
           default:
             return (
               <div className="welcome-container">
