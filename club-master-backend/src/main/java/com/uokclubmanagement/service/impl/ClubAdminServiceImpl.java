@@ -122,15 +122,17 @@ public class ClubAdminServiceImpl implements ClubAdminService {
     }
 
     @Override
-    public Optional<ClubAdmin> getClubAdminById(String clubAdminId) {
+    public ClubAdmin getClubAdminById(String clubAdminId) {
 
         Optional<ClubAdmin> optionalClubAdmin = clubAdminRepository.findById(clubAdminId);
 
         if (optionalClubAdmin.isEmpty()){
             throw new RuntimeException("Club admin id not found with: "+clubAdminId);
         }
-
-        return clubAdminRepository.findById(clubAdminId);
+        else{
+            ClubAdmin clubAdmin = optionalClubAdmin.get();
+            return clubAdmin;
+        }
     }
 
     @Override
