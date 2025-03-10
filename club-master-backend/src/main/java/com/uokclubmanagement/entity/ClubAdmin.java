@@ -16,6 +16,7 @@ public class ClubAdmin{
     private String memberId;
     private String fullName;
     private String email;
+    private String phone;
     @Indexed(unique = true)
     private String username;
     private String password;
@@ -57,6 +58,14 @@ public class ClubAdmin{
 
     public String getEmail() {
         return email;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
     public void setEmail(String email) {

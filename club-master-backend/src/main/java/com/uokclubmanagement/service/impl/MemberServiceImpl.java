@@ -106,6 +106,7 @@ public class MemberServiceImpl implements MemberService {
             // Update clubAdmin fields
             clubAdmin.setFullName(member.getFirstName()+" "+member.getLastName());
             clubAdmin.setEmail(member.getEmail());
+            clubAdmin.setPhone(member.getPhoneNo());
             clubAdmin.setImageUrl(member.getMemberImageUrl());
             clubAdminRepository.save(clubAdmin);
         }
