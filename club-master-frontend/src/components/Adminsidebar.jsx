@@ -20,8 +20,8 @@ const Adminsidebar = ({ changeView }) => {
           <ul className="administrator-submenu">
             <li onClick={() => changeView('createNewAdmin')}><FaPlus className="submenu-icon" /> Create New Admin</li>
             <li onClick={() => changeView('viewAllMainAdmin')}><FaUsers className="submenu-icon" /> View All Main Admins</li>
-            <li><FaEdit className="submenu-icon" /> Update Admin Profile</li>
-            <li><FaIdCard className="submenu-icon" /> Get Main Admins by ID</li>
+            {/* <li><FaEdit className="submenu-icon" /> Update Admin Profile</li>
+            <li><FaIdCard className="submenu-icon" /> Get Main Admins by ID</li> */}
           </ul>
         );
       case "Club":
@@ -29,17 +29,17 @@ const Adminsidebar = ({ changeView }) => {
           <ul className="administrator-submenu">
             <li onClick={() => changeView('createClub')}><FaPlus className="submenu-icon" /> <a>Create Club</a></li>
             <li onClick={() => changeView('viewClubs')}><FaPlus className="submenu-icon" /> View All Clubs</li>
-            <li><FaPlus className="submenu-icon" /> Update Club</li>
+            {/* <li><FaPlus className="submenu-icon" /> Update Club</li>
             <li><FaPlus className="submenu-icon" /> Delete Club</li>
             <li><FaPlus className="submenu-icon" /> Get Club by Club ID</li>
-            <li><FaPlus className="submenu-icon" /> Get Club by Member ID</li>
+            <li><FaPlus className="submenu-icon" /> Get Club by Member ID</li> */}
           </ul>
         );
         
       case "Events":
         return (
           <ul className="administrator-submenu">
-            <li><FaPlus className="submenu-icon" /> View all events</li>
+            <li onClick={() => changeView('viewEvents')}><FaPlus className="submenu-icon" /> View all events</li>
             <li><FaPlus className="submenu-icon" /> View  Events by club ID</li>
             <li><FaPlus className="submenu-icon" /> View Events by Member ID</li>
             
