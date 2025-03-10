@@ -64,11 +64,6 @@ const Sidebar = () => {
           </Link>
         </li>
 
-        <li className="sidebar-item">
-          <Link to="/calendar" className="sidebar-link">
-            <FaCalendar className="icon" /> Calendar
-          </Link>
-        </li>
       </ul>
     </div>
   );
