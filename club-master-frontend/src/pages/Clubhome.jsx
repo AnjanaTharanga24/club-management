@@ -39,7 +39,7 @@ const ClubCard = ({ club }) => {
           style={{ width: "60px", height: "50px", marginLeft: "10px" }}
         />
         <h2 className="aa-club-name" style={{ marginLeft: "10px" }}>
-          {club.clubName.toUpperCase()} CLUB
+          {club.clubName.toUpperCase()} 
         </h2>
       </div>
       <hr />

@@ -221,15 +221,6 @@ const Rotract = () => {
             <h1 className="p-5" style={{ width: "1800px" }}>
               {club.clubVision}
               <div className="typewriter-text2 mt-4">
-                <Typewriter
-                  words={["This is Our Vision"]}
-                  loop={0}
-                  cursor
-                  cursorStyle="|"
-                  typeSpeed={200}
-                  deleteSpeed={50}
-                  delaySpeed={1000}
-                />
               </div>
             </h1>
           </div>

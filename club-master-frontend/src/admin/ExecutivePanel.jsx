@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Users, X } from 'lucide-react';
+import { Users, X, Trash2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 export default function ExecutivePanel() {
@@ -10,9 +10,15 @@ export default function ExecutivePanel() {
     const [selectedClub, setSelectedClub] = useState(null);
     const [executivePanelMembers, setExecutivePanelMembers] = useState([]);
     const [loadingPanel, setLoadingPanel] = useState(false);
+    const [deleting, setDeleting] = useState(false);
     const navigate = useNavigate();
 
+    // Setup axios defaults or use interceptors for authentication headers if needed
+    // This might be needed if your backend requires authentication
     useEffect(() => {
+        // You might need to add authentication token here if required
+        // axios.defaults.headers.common['Authorization'] = `Bearer ${yourAuthToken}`;
+        
         // Fetch clubs data from the backend
         const fetchClubs = async () => {
             try {
@@ -50,6 +56,59 @@ export default function ExecutivePanel() {
         setExecutivePanelMembers([]);
     };
 
+    const handleDeleteMember = async (member) => {
+        if (!window.confirm(`Are you sure you want to remove ${member.memberName} from the executive panel?`)) {
+            return;
+        }
+
+        try {
+            setDeleting(true);
+            
+            // Create the DeleteExecutiveDTO required by the backend
+            const deleteExecutiveDTO = {
+                memberId: member.memberId,
+                role: member.role
+            };
+            
+            // Method 1: Using a more explicitly formatted request with appropriate headers
+            await axios({
+                method: 'DELETE',
+                url: `http://localhost:7000/api/v1/execution-panel/delete/${selectedClub.clubId}`,
+                data: deleteExecutiveDTO,
+                headers: {
+                    'Content-Type': 'application/json',
+                    // Add any authentication headers if needed
+                    // 'Authorization': `Bearer ${yourAuthToken}`,
+                }
+            });
+            
+            // Alternative method (comment out the above and use this if needed)
+            // const response = await fetch(`http://localhost:7000/api/v1/execution-panel/delete/${selectedClub.clubId}`, {
+            //     method: 'DELETE',
+            //     headers: {
+            //         'Content-Type': 'application/json',
+            //         // Add any authentication headers if needed
+            //     },
+            //     body: JSON.stringify(deleteExecutiveDTO)
+            // });
+            // 
+            // if (!response.ok) {
+            //     throw new Error(`Failed with status: ${response.status}`);
+            // }
+            
+            // After successful deletion, update the members list
+            setExecutivePanelMembers(executivePanelMembers.filter(m => 
+                !(m.memberId === member.memberId && m.role === member.role)
+            ));
+            
+        } catch (error) {
+            console.error('Error deleting executive panel member:', error);
+            alert(`Failed to delete executive panel member. ${error.response?.status === 403 ? 'You may not have permission to perform this action.' : 'Please try again.'}`);
+        } finally {
+            setDeleting(false);
+        }
+    };
+
     if (loading) {
         return (
             <div className="flex items-center justify-center h-screen">
@@ -59,7 +118,7 @@ export default function ExecutivePanel() {
     }
 
     return (
-        <div className="max-w-7xl mx-auto  py-8">
+        <div className="max-w-7xl mx-auto py-8">
             <div className="flex justify-between items-center mb-8">
                 <h1 className="text-3xl font-bold text-gray-800">Executive Panel</h1>
                 <div className="bg-blue-100 rounded-lg px-4 py-2">
@@ -151,6 +210,14 @@ export default function ExecutivePanel() {
                                                     {member.role}
                                                 </div>
                                             </div>
+                                            <button 
+                                                onClick={() => handleDeleteMember(member)}
+                                                disabled={deleting}
+                                                className="flex-shrink-0 text-red-500 hover:text-red-700 transition-colors duration-300"
+                                                title="Remove from executive panel"
+                                            >
+                                                <Trash2 size={18} />
+                                            </button>
                                         </div>
                                     ))}
                                 </div>

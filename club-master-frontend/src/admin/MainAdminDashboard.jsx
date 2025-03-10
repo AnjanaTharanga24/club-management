@@ -14,6 +14,8 @@ import ViewAllEvents from './ViewAllEvents';
 import ViewAdminNews from './ViewAdminNews';
 import ViewAdminProjects from './ViewAdminProjects';
 import ViewAdminAwards from './ViewAdminAwards';
+import ViewAllAdminCLubAdmin from './ViewAllAdminCLubAdmin';
+import AdminCreatCLubAdmin from './AdminCreatCLubAdmin';
 
 
 export default function MainAdminDashboard() {
@@ -53,6 +55,10 @@ export default function MainAdminDashboard() {
         return <ViewAdminProjects/>
       case 'viewAwards':
         return <ViewAdminAwards/>
+      case 'viewClubAdmin':
+        return <ViewAllAdminCLubAdmin/>
+      case 'createClubAdmin':
+        return <AdminCreatCLubAdmin/>
        
       default:
         return (
