@@ -1,8 +1,8 @@
-import axios from "axios";
 import React, { useState, useEffect, useContext } from "react";
 import { UserContext } from "../common/UserContext";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom"; // Import Link
 import Swal from "sweetalert2";
+import axios from "axios";
 
 const Rotractnav = ({
   clubEventPage,
@@ -10,6 +10,8 @@ const Rotractnav = ({
   clubLogoUrl,
   clubName,
   clubId,
+  clubDescription,
+  clubVision,
 }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const navigate = useNavigate();
@@ -18,38 +20,38 @@ const Rotractnav = ({
   const handleUnEnroll = async () => {
     try {
       const result = await Swal.fire({
-        title: 'Are you sure?',
-        text: 'You are about to unenroll from this club. This action cannot be undone.',
-        icon: 'warning',
+        title: "Are you sure?",
+        text: "You are about to unenroll from this club. This action cannot be undone.",
+        icon: "warning",
         showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes, unenroll!',
-        cancelButtonText: 'Cancel',
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, unenroll!",
+        cancelButtonText: "Cancel",
       });
-  
+
       if (result.isConfirmed) {
         const response = await axios.delete(
           `http://localhost:7000/api/v1/club/${user.id}/unroll-member/${clubId}`
         );
         console.log(response.data);
-  
+
         await Swal.fire({
-          title: 'Unenrolled!',
-          text: 'You have been successfully unenrolled from the club.',
-          icon: 'success',
+          title: "Unenrolled!",
+          text: "You have been successfully unenrolled from the club.",
+          icon: "success",
         });
 
-        navigate('/clubHome');
+        navigate("/clubHome");
       }
     } catch (error) {
-      console.log('Error while unenrolling member', error);
-  
+      console.log("Error while unenrolling member", error);
+
       await Swal.fire({
-        title: 'Error!',
-        text: 'An error occurred while unenrolling. Please try again.',
-        icon: 'error',
-        confirmButtonText: 'OK',
+        title: "Error!",
+        text: "An error occurred while unenrolling. Please try again.",
+        icon: "error",
+        confirmButtonText: "OK",
       });
     }
   };
@@ -105,72 +107,75 @@ const Rotractnav = ({
             className="hidden md:flex items-center space-x-14"
             style={{ marginRight: "210px" }}
           >
-            <a
+            <Link
+              to="/"
               className={`transition duration-300 text-lg font-medium ${
                 isScrolled
                   ? "text-white hover:text-blue-200"
                   : "text-gray-800 hover:text-blue-600"
               }`}
-              href="/"
             >
               Home
-            </a>
-            <a
+            </Link>
+            <Link
+              to={{
+                pathname: "/rotractabout",
+                state: { clubDescription, clubVision }, // Pass club description and vision
+              }}
               className={`transition duration-300 text-lg font-medium ${
                 isScrolled
                   ? "text-white hover:text-blue-200"
                   : "text-gray-800 hover:text-blue-600"
               }`}
-              href="/rotractabout"
             >
               About
-            </a>
-            <a
+            </Link>
+            <Link
+              to="/rotractcontact"
               className={`transition duration-300 text-lg font-medium ${
                 isScrolled
                   ? "text-white hover:text-blue-200"
                   : "text-gray-800 hover:text-blue-600"
               }`}
-              href="/rotractcontact"
             >
               Contact
-            </a>
-            <a
+            </Link>
+            <Link
+              to="/clubHome"
               className={`transition duration-300 text-lg font-medium ${
                 isScrolled
                   ? "text-white hover:text-blue-200"
                   : "text-gray-800 hover:text-blue-600"
               }`}
-              href="/clubHome"
             >
               Clubs
-            </a>
+            </Link>
           </div>
 
           <div
-            className=" hidden md:flex items-center space-x-4"
+            className="hidden md:flex items-center space-x-4"
             style={{ marginRight: "-100px" }}
           >
-            <a
+            <Link
+              to={clubEventPage}
               className={`transition duration-300 px-5 py-3 rounded-full text-lg font-medium flex items-center ${
                 isScrolled
                   ? "bg-white text-blue-600 hover:bg-blue-100"
                   : "bg-blue-500 text-white hover:bg-blue-600 shadow-md hover:shadow-lg"
               }`}
-              href={clubEventPage}
             >
               <span>Events</span>
-            </a>
-            <a
+            </Link>
+            <Link
+              to={clubNewsPage}
               className={`transition duration-300 px-5 py-3 rounded-full text-lg font-medium flex items-center ${
                 isScrolled
                   ? "bg-white text-blue-600 hover:bg-blue-100"
                   : "bg-blue-500 text-white hover:bg-blue-600 shadow-md hover:shadow-lg"
               }`}
-              href={clubNewsPage}
             >
               <span>News</span>
-            </a>
+            </Link>
 
             <button
               className={`transition duration-300 px-5 py-3 rounded-full text-lg font-medium flex items-center ${
@@ -178,9 +183,7 @@ const Rotractnav = ({
                   ? "bg-white text-red-600 hover:bg-red-50"
                   : "bg-red-500 text-white hover:bg-red-600 shadow-md hover:shadow-lg"
               }`}
-              onClick={() => {
-                handleUnEnroll();
-              }}
+              onClick={handleUnEnroll}
             >
               <span>Unenroll</span>
             </button>

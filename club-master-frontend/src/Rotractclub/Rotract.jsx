@@ -205,6 +205,8 @@ const Rotract = () => {
         clubLogoUrl={club.clubLogoUrl}
         clubName={club.clubName}
         clubId={club.clubId}
+        clubDescription={club.clubDescription}
+        clubVision={club.clubVision}
       />
 
       {/* Background Section */}
@@ -403,7 +405,8 @@ const Rotract = () => {
           </p>
           <p>
             Explore how young leaders are driving positive change, fostering
-            connections, and making a difference in communities across the globe.
+            connections, and making a difference in communities across the
+            globe.
           </p>
           <a
             href={`/rotractnews?clubId=${club.clubId}&clubName=${club.clubName}`}
@@ -415,7 +418,7 @@ const Rotract = () => {
 
         {/* Right section with image */}
         <div className="report-right-section">
-          <img src="/uu.jpg" alt="Annual Report"  />
+          <img src="/uu.jpg" alt="Annual Report" />
         </div>
       </div>
 
@@ -446,11 +449,7 @@ const Rotract = () => {
 
         {/* Right Side: Images */}
         <div className="revent-image-section">
-          <img
-            src="/102.jpg"
-            alt="Alternate Event"
-            className="revent-image"
-          />
+          <img src="/102.jpg" alt="Alternate Event" className="revent-image" />
         </div>
       </div>
 
@@ -549,7 +548,12 @@ const Rotract = () => {
         </div>
       </div>
 
-      <Rotractfooter clubEmail={club.clubEmail} clubImage={club.clubLogoUrl} clubName={club.clubName} clubVision={club.clubVision} />
+      <Rotractfooter
+        clubEmail={club.clubEmail}
+        clubImage={club.clubLogoUrl}
+        clubName={club.clubName}
+        clubVision={club.clubVision}
+      />
     </div>
   );
 };
