@@ -13,6 +13,12 @@ export default function ViewClubAdminNews() {
         newsTitle: '',
         description: ''
     });
+    const [memberDetails, setMemberDetails] = useState({});
+    const [showMembersModal, setShowMembersModal] = useState(false);
+    const [modalContent, setModalContent] = useState({
+        title: '',
+        members: []
+    });
 
     useEffect(() => {
         getAllNews();
@@ -26,6 +32,39 @@ export default function ViewClubAdminNews() {
             });
         }
     }, [selectedNews]);
+
+    useEffect(() => {
+        // Collect all member IDs from likes and dislikes
+        const memberIds = new Set();
+        news.forEach(item => {
+            item.like.membersLike.forEach(id => memberIds.add(id));
+            item.like.membersDislike.forEach(id => memberIds.add(id));
+        });
+        
+        // Fetch member details for all collected IDs
+        fetchMemberDetails(Array.from(memberIds));
+    }, [news]);
+
+    const fetchMemberDetails = async (memberIds) => {
+        if (!memberIds.length) return;
+        
+        const details = {};
+        
+        for (const memberId of memberIds) {
+            try {
+                const response = await axios.get(`http://localhost:7000/api/v1/member/getMember-memberId/${memberId}`);
+                details[memberId] = {
+                    name: `${response.data.firstName} ${response.data.lastName}`,
+                    imageUrl: response.data.memberImageUrl
+                };
+            } catch (error) {
+                console.error(`Error fetching details for member ${memberId}:`, error);
+                details[memberId] = { name: 'Unknown Member', imageUrl: null };
+            }
+        }
+        
+        setMemberDetails(details);
+    };
 
     const getAllNews = async () => {
         try {
@@ -127,6 +166,30 @@ export default function ViewClubAdminNews() {
         });
     };
 
+    const showLikeDetails = (newsItem) => {
+        setModalContent({
+            title: 'Members who liked',
+            members: newsItem.like.membersLike
+        });
+        setShowMembersModal(true);
+    };
+
+    const showDislikeDetails = (newsItem) => {
+        setModalContent({
+            title: 'Members who disliked',
+            members: newsItem.like.membersDislike
+        });
+        setShowMembersModal(true);
+    };
+
+    const closeMembersModal = () => {
+        setShowMembersModal(false);
+        setModalContent({
+            title: '',
+            members: []
+        });
+    };
+
     return (
         <div className="max-w-6xl mx-auto p-6">
             <div className="flex justify-between items-center mb-8">
@@ -178,18 +241,25 @@ export default function ViewClubAdminNews() {
                                 </div>
                                 <p className="text-gray-700 mb-4">{item.description}</p>
                                 <div className="flex space-x-4 text-sm">
-                                    <div className="flex items-center text-gray-600">
+                                    <button 
+                                        onClick={() => showLikeDetails(item)}
+                                        className="flex items-center text-gray-600 hover:text-green-600 transition-colors duration-200"
+                                    >
                                         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-1 text-green-500" viewBox="0 0 20 20" fill="currentColor">
                                             <path d="M2 10.5a1.5 1.5 0 113 0v6a1.5 1.5 0 01-3 0v-6zM6 10.333v5.43a2 2 0 001.106 1.79l.05.025A4 4 0 008.943 18h5.416a2 2 0 001.962-1.608l1.2-6A2 2 0 0015.56 8H12V4a2 2 0 00-2-2 1 1 0 00-1 1v.667a4 4 0 01-.8 2.4L6.8 7.933a4 4 0 00-.8 2.4z" />
                                         </svg>
                                         <span>{item.like.membersLike.length} Likes</span>
-                                    </div>
-                                    <div className="flex items-center text-gray-600">
+                                    </button>
+                                    
+                                    <button 
+                                        onClick={() => showDislikeDetails(item)}
+                                        className="flex items-center text-gray-600 hover:text-red-600 transition-colors duration-200"
+                                    >
                                         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-1 text-red-500" viewBox="0 0 20 20" fill="currentColor">
                                             <path d="M18 9.5a1.5 1.5 0 11-3 0v-6a1.5 1.5 0 013 0v6zM14 9.667v-5.43a2 2 0 00-1.105-1.79l-.05-.025A4 4 0 0011.055 2H5.64a2 2 0 00-1.962 1.608l-1.2 6A2 2 0 004.44 12H8v4a2 2 0 002 2 1 1 0 001-1v-.667a4 4 0 01.8-2.4l1.4-1.866a4 4 0 00.8-2.4z" />
                                         </svg>
                                         <span>{item.like.membersDislike.length} Dislikes</span>
-                                    </div>
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -260,6 +330,73 @@ export default function ViewClubAdminNews() {
                                 </button>
                             </div>
                         </form>
+                    </div>
+                </div>
+            )}
+
+            {/* Members Modal (for Likes/Dislikes) */}
+            {showMembersModal && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                    <div className="bg-white rounded-lg w-full max-w-md p-6 mx-4">
+                        <div className="flex justify-between items-center mb-4">
+                            <h2 className="text-xl font-bold text-gray-800">{modalContent.title}</h2>
+                            <button 
+                                onClick={closeMembersModal}
+                                className="text-gray-400 hover:text-gray-600"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                            </button>
+                        </div>
+                        
+                        <div className="max-h-96 overflow-y-auto">
+                            {modalContent.members.length === 0 ? (
+                                <div className="text-center py-8">
+                                    <p className="text-gray-500">No members found</p>
+                                </div>
+                            ) : (
+                                <div className="space-y-2">
+                                    {modalContent.members.map(memberId => (
+                                        <div 
+                                            key={memberId} 
+                                            className="flex items-center p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors duration-200"
+                                        >
+                                            {memberDetails[memberId]?.imageUrl ? (
+                                                <img 
+                                                    src={memberDetails[memberId].imageUrl} 
+                                                    alt={memberDetails[memberId]?.name || 'Member'} 
+                                                    className="h-10 w-10 rounded-full mr-3 object-cover border border-gray-200"
+                                                />
+                                            ) : (
+                                                <div className="h-10 w-10 rounded-full bg-gray-200 mr-3 flex items-center justify-center">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-500" viewBox="0 0 20 20" fill="currentColor">
+                                                        <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
+                                                    </svg>
+                                                </div>
+                                            )}
+                                            <div>
+                                                <p className="font-medium text-gray-800">
+                                                    {memberDetails[memberId]?.name || 'Unknown Member'}
+                                                </p>
+                                                <p className="text-xs text-gray-500">
+                                                    ID: {memberId}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+                        
+                        <div className="mt-4 text-right">
+                            <button
+                                onClick={closeMembersModal}
+                                className="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500"
+                            >
+                                Close
+                            </button>
+                        </div>
                     </div>
                 </div>
             )}

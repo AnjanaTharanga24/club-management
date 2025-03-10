@@ -14,6 +14,10 @@ export default function ViewClubAdminEvents() {
     const [imageFile, setImageFile] = useState(null);
     const [imagePreview, setImagePreview] = useState('');
     const [updating, setUpdating] = useState(false);
+    // New state for comments modal
+    const [showCommentsModal, setShowCommentsModal] = useState(false);
+    const [selectedEventComments, setSelectedEventComments] = useState([]);
+    const [selectedEventName, setSelectedEventName] = useState('');
 
     const clubId = user?.id?.split(':')[0];
     const clubAdminId = user?.id;
@@ -122,6 +126,19 @@ export default function ViewClubAdminEvents() {
         }
     };
 
+    // New function to handle viewing comments
+    const handleViewComments = (event) => {
+        setSelectedEventComments(event.comments || []);
+        setSelectedEventName(event.eventName);
+        setShowCommentsModal(true);
+    };
+
+    const handleCloseCommentsModal = () => {
+        setShowCommentsModal(false);
+        setSelectedEventComments([]);
+        setSelectedEventName('');
+    };
+
     const handleCloseModal = () => {
         setShowEditModal(false);
         setCurrentEvent(null);
@@ -186,7 +203,6 @@ export default function ViewClubAdminEvents() {
             } else {
                 // Handle case where no new image is selected
                 // This ensures we explicitly tell the server there's no new image
-                // You might need to adjust your backend to handle this case
                 formDataObj.append('file', new Blob([''], { type: 'application/octet-stream' }));
             }
             
@@ -303,7 +319,12 @@ export default function ViewClubAdminEvents() {
                             )}
                             <div className="mt-3 pt-3 border-t border-gray-200 flex justify-between items-center">
                                 <span className="text-xs text-gray-500">Published by: {event.publisherName}</span>
-                                <span className="text-xs text-gray-500">Comments: {event.comments?.length || 0}</span>
+                                <button 
+                                    onClick={() => handleViewComments(event)}
+                                    className="text-xs text-blue-600 hover:text-blue-800 hover:underline"
+                                >
+                                    Comments: {event.comments?.length || 0}
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -357,6 +378,7 @@ export default function ViewClubAdminEvents() {
                                     <option value="Workshop">Workshop</option>
                                     <option value="Social">Social</option>
                                     <option value="Competition">Competition</option>
+                                    <option value="Outdoor Adventure">Outdoor Adventure</option>
                                     <option value="Other">Other</option>
                                 </select>
                             </div>
@@ -457,6 +479,58 @@ export default function ViewClubAdminEvents() {
                                 </button>
                             </div>
                         </form>
+                    </div>
+                </div>
+            )}
+
+            {/* Comments Modal */}
+            {showCommentsModal && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+                    <div className="bg-white rounded-lg shadow-xl max-w-lg w-full">
+                        <div className="p-4 border-b border-gray-200 flex justify-between items-center">
+                            <h2 className="text-xl font-semibold">Comments - {selectedEventName}</h2>
+                            <button 
+                                onClick={handleCloseCommentsModal}
+                                className="text-gray-500 hover:text-gray-700"
+                            >
+                                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
+                                </svg>
+                            </button>
+                        </div>
+                        <div className="p-4 max-h-96 overflow-y-auto">
+                            {selectedEventComments.length > 0 ? (
+                                <ul className="space-y-2">
+                                    {selectedEventComments.map((comment, index) => (
+                                        <li 
+                                            key={index} 
+                                            className="p-3 bg-gray-50 rounded border border-gray-200"
+                                        >
+                                            <div className="flex items-start">
+                                                <div className="bg-blue-500 text-white rounded-full w-8 h-8 flex items-center justify-center flex-shrink-0 mr-3">
+                                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                                                    </svg>
+                                                </div>
+                                                <div>
+                                                    <p className="text-gray-700">{comment}</p>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    ))}
+                                </ul>
+                            ) : (
+                                <div className="text-center py-8 text-gray-500">No comments yet.</div>
+                            )}
+                        </div>
+                        <div className="p-4 border-t border-gray-200">
+                            <button
+                                onClick={handleCloseCommentsModal}
+                                className="w-full px-4 py-2 bg-blue-600 text-white hover:bg-blue-700 rounded"
+                            >
+                                Close
+                            </button>
+                        </div>
                     </div>
                 </div>
             )}
