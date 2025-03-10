@@ -130,6 +130,29 @@ export default function ClubDetails({ clubId }) {
               </div>
               <div className="info-value">{club.clubProducer}</div>
             </div>
+
+            <div className="info-row">
+              <div className="info-label">
+                <i className="bi bi-envelope"></i> Email
+              </div>
+              <div className="info-value">{club.clubEmail}</div>
+            </div>
+
+            <div className="info-row">
+              <div className="info-label">
+                <i className="bi bi-telephone"></i> Phone
+              </div>
+              <div className="info-value">{club.clubPhone}</div>
+            </div>
+
+            <div className="info-row">
+              <div className="info-label">
+                <i className="bi bi-image"></i> Logo
+              </div>
+              <div className="info-value">
+                <img src={club.clubLogoUrl} alt="Club Logo" className="club-logo" />
+              </div>
+            </div>
           </div>
         </div>
 
@@ -145,19 +168,24 @@ export default function ClubDetails({ clubId }) {
           </div>
         </div>
 
-        <div className="quick-actions">
-          <button className="quick-action-button news-button">
-            <i className="bi bi-newspaper"></i>
-            <span>Club News</span>
-          </button>
-          <button className="quick-action-button events-button">
-            <i className="bi bi-calendar-event"></i>
-            <span>Club Events</span>
-          </button>
-          <button className="quick-action-button contact-button">
-            <i className="bi bi-envelope"></i>
-            <span>Contact Us</span>
-          </button>
+        <div className="club-details-card members-card">
+          <div className="card-header">
+            <i className="bi bi-people"></i>
+            <h2>Members</h2>
+          </div>
+          <div className="card-body">
+            <div className="members-list">
+              {club.positionHoldingMembersAndRoles.map((member, index) => (
+                <div key={index} className="member-item">
+                  <div className="member-info">
+                    <div className="member-name">{member.memberName}</div>
+                    <div className="member-role">{member.role}</div>
+                    <div className="member-email">{member.email}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
 

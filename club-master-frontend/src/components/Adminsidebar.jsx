@@ -40,17 +40,17 @@ const Adminsidebar = ({ changeView }) => {
         return (
           <ul className="administrator-submenu">
             <li onClick={() => changeView('viewEvents')}><FaPlus className="submenu-icon" /> View all events</li>
-            <li><FaPlus className="submenu-icon" /> View  Events by club ID</li>
+            {/* <li><FaPlus className="submenu-icon" /> View  Events by club ID</li>
             <li><FaPlus className="submenu-icon" /> View Events by Member ID</li>
-            
+             */}
           </ul>
         );
       case "News":
         return (
           <ul className="administrator-submenu">
-            <li><FaPlus className="submenu-icon" /> Get all News</li>
-            <li><FaPlus className="submenu-icon" /> Get News by club ID</li>
-            <li><FaPlus className="submenu-icon" /> Get News by Member ID</li>
+            <li onClick={() => changeView('viewNews')}><FaPlus className="submenu-icon" /> Get all News</li>
+            {/* <li><FaPlus className="submenu-icon" /> Get News by club ID</li> */}
+            {/* <li><FaPlus className="submenu-icon" /> Get News by Member ID</li> */}
             
           </ul>
         );
@@ -58,18 +58,28 @@ const Adminsidebar = ({ changeView }) => {
       case "Projects":
         return (
           <ul className="administrator-submenu">
-            <li><FaPlus className="submenu-icon" /> View all Projects</li>
-            <li><FaPlus className="submenu-icon" />View Projects by club ID</li>
-            <li><FaPlus className="submenu-icon" /> View Projects by Member ID</li>
+            <li onClick={() => changeView('viewProjects')}><FaPlus className="submenu-icon"  /> View all Projects</li>
+            {/* <li><FaPlus className="submenu-icon" />View Projects by club ID</li> */}
+            {/* <li><FaPlus className="submenu-icon" /> View Projects by Member ID</li> */}
             
           </ul>
         );
       case "User Help":
         return <ul className="administrator-submenu"><li onClick={() => changeView('userHelp')}><FaPlus className="submenu-icon"  /> Get all users messages</li></ul>;
       case "Awards":
-        return <ul className="administrator-submenu"><li><FaPlus className="submenu-icon" /> View all Events by Club ID </li></ul>;
+        return (
+          <ul className="administrator-submenu">
+            <li onClick={() => changeView('viewAwards')}><FaPlus className="submenu-icon" /> View all Awards</li>
+            {/* Add more submenu items for Awards if needed */}
+          </ul>
+        );
       case "Executive Panel":
-        return <ul className="administrator-submenu"><li onClick={() => changeView('exPanel')}><FaPlus className="submenu-icon" /> View Executive Panel</li></ul>;
+        return (
+          <ul className="administrator-submenu">
+            <li onClick={() => changeView('exPanel')}><FaPlus className="submenu-icon" /> View Executive Panel</li>
+            {/* Add more submenu items for Executive Panel if needed */}
+          </ul>
+        );
       default:
         return null;
     }

@@ -1,86 +1,72 @@
-import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Users, X, Calendar, Map, Clock, Trash2 } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import { FaNewspaper, FaSpinner, FaTrash, FaTimes, FaCalendarAlt, FaTrophy, FaMapMarkerAlt, FaClock, FaThumbsUp, FaThumbsDown, FaComment } from 'react-icons/fa';
+import { Modal, Button } from 'react-bootstrap';
 import Swal from 'sweetalert2';
 
-export default function ViewAllClubs() {
+export default function ViewAllEvents() {
     const [clubs, setClubs] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [showPanel, setShowPanel] = useState(false);
-    const [showEvents, setShowEvents] = useState(false);
+    const [error, setError] = useState(null);
+    
+    // Events modal states
+    const [showModal, setShowModal] = useState(false);
     const [selectedClub, setSelectedClub] = useState(null);
-    const [executivePanelMembers, setExecutivePanelMembers] = useState([]);
     const [clubEvents, setClubEvents] = useState([]);
-    const [loadingPanel, setLoadingPanel] = useState(false);
     const [loadingEvents, setLoadingEvents] = useState(false);
-    const navigate = useNavigate();
+    const [eventsError, setEventsError] = useState(null);
 
     useEffect(() => {
-        // Fetch clubs data from the backend
-        const fetchClubs = async () => {
-            try {
-                setLoading(true);
-                const response = await axios.get('http://localhost:7000/api/v1/club/all');
-                setClubs(response.data);
-                setLoading(false);
-            } catch (error) {
-                console.error('Error fetching clubs:', error);
-                setLoading(false);
-            }
-        };
-
-        fetchClubs();
+        getAllClubs();
     }, []);
 
-    const handleViewPanel = async (club) => {
-        setSelectedClub(club);
-        setLoadingPanel(true);
-        setShowPanel(true);
-        
+    const getAllClubs = async () => {
+        setLoading(true);
         try {
-            // Replace with your actual API endpoint to fetch executive panel members
-            const response = await axios.get(`http://localhost:7000/api/v1/club/${club.clubId}/members`);
-            setExecutivePanelMembers(response.data || []);
+            const response = await axios.get(`http://localhost:7000/api/v1/club/all`);
+            setClubs(response.data);
+            setError(null);
         } catch (error) {
-            console.error('Error fetching panel members:', error);
-            setExecutivePanelMembers([]);
+            console.error('Error fetching clubs:', error);
+            setError('Failed to load clubs. Please try again later.');
         } finally {
-            setLoadingPanel(false);
+            setLoading(false);
         }
     };
 
     const handleViewEvents = async (club) => {
         setSelectedClub(club);
+        setShowModal(true);
         setLoadingEvents(true);
-        setShowEvents(true);
         
         try {
             const response = await axios.get(`http://localhost:7000/api/v1/event/${club.clubId}/events`);
-            setClubEvents(response.data || []);
+            setClubEvents(response.data);
+            setEventsError(null);
         } catch (error) {
-            console.error('Error fetching club events:', error);
-            setClubEvents([]);
+            console.error('Error fetching events:', error);
+            setEventsError('Failed to load events. Please try again later.');
         } finally {
             setLoadingEvents(false);
         }
     };
 
-    const handleDeleteEvent = async (eventId) => {
+    const handleDeleteEvent = (eventId) => {
         Swal.fire({
             title: 'Are you sure?',
             text: "You won't be able to revert this!",
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
             confirmButtonText: 'Yes, delete it!'
         }).then(async (result) => {
             if (result.isConfirmed) {
                 try {
                     await axios.delete(`http://localhost:7000/api/v1/event/delete/${eventId}`);
                     
-                    // Update the events list after deletion
+                    // Update the events list
                     setClubEvents(clubEvents.filter(event => event.eventId !== eventId));
                     
                     Swal.fire(
@@ -92,7 +78,7 @@ export default function ViewAllClubs() {
                     console.error('Error deleting event:', error);
                     Swal.fire(
                         'Error!',
-                        'There was a problem deleting the event.',
+                        'Failed to delete the event. Please try again.',
                         'error'
                     );
                 }
@@ -101,75 +87,167 @@ export default function ViewAllClubs() {
     };
 
     const closeModal = () => {
-        setShowPanel(false);
-        setShowEvents(false);
+        setShowModal(false);
+        setSelectedClub(null);
+        setClubEvents([]);
     };
 
-    const formatDate = (dateString) => {
-        if (!dateString) return '';
-        const date = new Date(dateString);
-        return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+    // Convert array date format [year, month, day] to a Date object
+    const parseArrayDate = (dateArray) => {
+        if (!dateArray || !Array.isArray(dateArray) || dateArray.length < 3) {
+            return null;
+        }
+        // Note: Month is 0-indexed in JavaScript Date, but 1-indexed in the API response
+        return new Date(dateArray[0], dateArray[1] - 1, dateArray[2]);
     };
 
-    const formatTime = (timeString) => {
-        if (!timeString) return '';
-        // Handle time format HH:MM:SS
-        const [hours, minutes] = timeString.split(':');
-        const hour = parseInt(hours);
-        const ampm = hour >= 12 ? 'PM' : 'AM';
-        const hour12 = hour % 12 || 12;
-        return `${hour12}:${minutes} ${ampm}`;
+    // Format date for display
+    const formatDate = (dateArray) => {
+        if (!dateArray) return 'Date not specified';
+        
+        const date = parseArrayDate(dateArray);
+        if (!date) return 'Invalid date';
+        
+        return date.toLocaleDateString();
     };
 
-    return (
-        <div className="max-w-7xl mx-auto py-8">
-            <div className="flex justify-between items-center mb-8">
-                <h1 className="text-3xl font-bold text-gray-800">All Clubs</h1>
-                <div className="bg-blue-100 rounded-lg px-4 py-2">
-                    <span className="text-blue-800 font-medium">{clubs.length} Clubs</span>
+    // Convert array time format [hour, minute, second?] to a formatted string
+    const formatTime = (timeArray) => {
+        if (!timeArray || !Array.isArray(timeArray) || timeArray.length < 2) {
+            return 'Time not specified';
+        }
+        
+        const hours = timeArray[0];
+        const minutes = timeArray[1].toString().padStart(2, '0');
+        const ampm = hours >= 12 ? 'PM' : 'AM';
+        const displayHours = hours % 12 || 12;
+        
+        return `${displayHours}:${minutes} ${ampm}`;
+    };
+
+    // Function to determine if an event is upcoming, ongoing, or past
+    const getEventStatus = (event) => {
+        if (!event.scheduledDate) return 'unknown';
+        
+        const today = new Date();
+        const eventDate = parseArrayDate(event.scheduledDate);
+        
+        if (!eventDate) return 'unknown';
+        
+        // Reset time parts for date comparison
+        today.setHours(0, 0, 0, 0);
+        eventDate.setHours(0, 0, 0, 0);
+        
+        if (eventDate.getTime() > today.getTime()) {
+            return 'upcoming';
+        } else if (eventDate.getTime() === today.getTime()) {
+            return 'ongoing';
+        } else {
+            return 'past';
+        }
+    };
+
+    // Function to get badge color based on event status
+    const getStatusBadgeColor = (status) => {
+        switch (status) {
+            case 'upcoming':
+                return '#2ecc71'; // Green
+            case 'ongoing':
+                return '#3498db'; // Blue
+            case 'past':
+                return '#95a5a6'; // Gray
+            default:
+                return '#e74c3c'; // Red
+        }
+    };
+
+    if (loading) {
+        return (
+            <div className="container d-flex justify-content-center align-items-center" style={{ minHeight: '60vh' }}>
+                <div className="text-center">
+                    <FaSpinner className="fa-spin mb-3" style={{ fontSize: '2rem', color: '#4a6cf7' }} />
+                    <p className="lead">Loading clubs...</p>
                 </div>
             </div>
+        );
+    }
 
-            {loading ? (
-                <div className="flex items-center justify-center py-20">
-                    <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+    if (error) {
+        return (
+            <div className="container mt-5">
+                <div className="alert alert-danger text-center" role="alert">
+                    {error}
+                    <button className="btn btn-outline-danger ms-3" onClick={getAllClubs}>Retry</button>
                 </div>
-            ) : clubs.length === 0 ? (
-                <div className="text-center py-10 bg-gray-50 rounded-lg">
-                    <p className="text-gray-500">No clubs found</p>
+            </div>
+        );
+    }
+
+    return (
+        <div className="container py-5">
+            <header className="mb-5 text-center">
+                <h1 className="display-4 fw-bold">Club Directory</h1>
+                <p className="lead text-muted">Browse our clubs and discover events</p>
+                <hr className="my-4 w-25 mx-auto" style={{ height: '3px', backgroundColor: '#4a6cf7' }} />
+            </header>
+
+            {clubs.length === 0 ? (
+                <div className="text-center py-5">
+                    <p className="lead">No clubs available at this time.</p>
                 </div>
             ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="row g-4">
                     {clubs.map((club) => (
-                        <div 
-                            key={club.clubId} 
-                            className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300"
-                        >
-                            <div className="bg-gradient-to-r from-blue-500 to-indigo-600 h-3"></div>
-                            <div className="p-6">
-                                <h3 className="font-bold text-xl text-gray-800 mb-2 truncate">{club.clubName}</h3>
-                                <p className="text-gray-600 text-sm mb-4 truncate">{club.clubEmail}</p>
-                                
-                                <div className="flex items-center mb-6">
-                                    <Users size={18} className="text-gray-400 mr-2" />
-                                    <span className="text-gray-700">
-                                        {club.positionHoldingMembersAndRoles ? club.positionHoldingMembersAndRoles.length : 0} Members with Positions
+                        <div key={club.clubId} className="col-md-6 col-lg-4">
+                            <div className="card h-100 shadow-sm border-0 rounded-3 hover-elevation" 
+                                style={{ transition: 'transform 0.3s, box-shadow 0.3s' }}>
+                                <div className="d-flex justify-content-center align-items-center pt-4 pb-2">
+                                    <div className="logo-container rounded-circle border border-3 border-light p-1 shadow" 
+                                         style={{ width: '130px', height: '130px', overflow: 'hidden', backgroundColor: '#f8f9fa' }}>
+                                        <img 
+                                            src={club.clubLogoUrl} 
+                                            alt={`${club.clubName} Logo`} 
+                                            style={{ 
+                                                width: '100%', 
+                                                height: '100%', 
+                                                objectFit: 'cover',
+                                                borderRadius: '50%'
+                                            }}
+                                            onError={(e) => {
+                                                e.target.src = 'https://via.placeholder.com/150?text=Club';
+                                            }}
+                                        />
+                                    </div>
+                                </div>
+                                <div className="position-absolute top-0 end-0 m-3">
+                                    <span className="badge rounded-pill" 
+                                          style={{ backgroundColor: '#4a6cf7' }}>
+                                        ID: {club.clubId}
                                     </span>
                                 </div>
-                                
-                                <div className="grid grid-cols-2 gap-3">
-                                    <button 
-                                        onClick={() => handleViewPanel(club)}
-                                        className="w-full bg-blue-50 hover:bg-blue-100 text-blue-700 font-medium py-2 px-4 rounded-md transition-colors duration-300"
-                                    >
-                                        View Panel
-                                    </button>
-                                    <button 
-                                        onClick={() => handleViewEvents(club)}
-                                        className="w-full bg-green-50 hover:bg-green-100 text-green-700 font-medium py-2 px-4 rounded-md transition-colors duration-300"
-                                    >
-                                        View Events
-                                    </button>
+                                <div className="card-body d-flex flex-column">
+                                    <h5 className="card-title fw-bold text-center mb-3">{club.clubName}</h5>
+                                    <div className="card-text text-muted mb-4" style={{ 
+                                        overflow: 'hidden', 
+                                        textOverflow: 'ellipsis',
+                                        display: '-webkit-box',
+                                        WebkitLineClamp: 3,
+                                        WebkitBoxOrient: 'vertical',
+                                        lineHeight: '1.5rem',
+                                        height: '4.5rem'
+                                    }}>
+                                        {club.clubDescription || "No description available."}
+                                    </div>
+                                    <div className="mt-auto">
+                                        <button 
+                                            onClick={() => handleViewEvents(club)}
+                                            className="btn btn-primary w-100 d-flex align-items-center justify-content-center gap-2"
+                                            style={{ backgroundColor: '#4a6cf7', borderColor: '#4a6cf7' }}
+                                        >
+                                            <FaCalendarAlt />
+                                            <span>View Events</span>
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -177,164 +255,166 @@ export default function ViewAllClubs() {
                 </div>
             )}
 
-            {/* Executive Panel Modal */}
-            {showPanel && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-                    <div className="bg-white rounded-lg shadow-lg w-full max-w-3xl max-h-[90vh] overflow-hidden">
-                        <div className="bg-gradient-to-r from-blue-500 to-indigo-600 p-4 flex justify-between items-center">
-                            <h2 className="text-white text-xl font-bold">{selectedClub?.clubName} - Executive Panel</h2>
-                            <button 
-                                onClick={closeModal}
-                                className="text-white hover:bg-white hover:bg-opacity-20 rounded-full p-1"
-                            >
-                                <X size={24} />
-                            </button>
+            {/* Events Modal */}
+            <Modal 
+                show={showModal} 
+                onHide={closeModal} 
+                size="lg" 
+                centered
+                backdrop="static"
+            >
+                <Modal.Header className="bg-light">
+                    <Modal.Title>
+                        {selectedClub && (
+                            <div className="d-flex align-items-center">
+                                <img 
+                                    src={selectedClub.clubLogoUrl} 
+                                    alt={`${selectedClub.clubName} Logo`}
+                                    style={{ width: '40px', height: '40px', objectFit: 'cover', borderRadius: '50%', marginRight: '10px' }}
+                                    onError={(e) => {
+                                        e.target.src = 'https://via.placeholder.com/40?text=C';
+                                    }}
+                                />
+                                <span>{selectedClub.clubName} - Events</span>
+                            </div>
+                        )}
+                    </Modal.Title>
+                    <Button variant="close" onClick={closeModal} aria-label="Close" />
+                </Modal.Header>
+                <Modal.Body style={{ maxHeight: '70vh', overflowY: 'auto' }}>
+                    {loadingEvents ? (
+                        <div className="text-center py-5">
+                            <FaSpinner className="fa-spin mb-3" style={{ fontSize: '1.5rem', color: '#4a6cf7' }} />
+                            <p>Loading events...</p>
                         </div>
-                        
-                        <div className="p-6 overflow-y-auto max-h-[calc(90vh-80px)]">
-                            {loadingPanel ? (
-                                <div className="flex items-center justify-center py-12">
-                                    <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
-                                </div>
-                            ) : executivePanelMembers.length === 0 ? (
-                                <div className="text-center py-8 bg-gray-50 rounded-lg">
-                                    <p className="text-gray-500">No executive panel members found</p>
-                                </div>
-                            ) : (
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    {executivePanelMembers.map((member, index) => (
-                                        <div key={index} className="bg-gray-50 rounded-lg p-4 flex items-center space-x-4">
-                                            <div className="flex-shrink-0 h-12 w-12 bg-gray-200 rounded-full overflow-hidden">
-                                                {member.imageUrl ? (
-                                                    <img 
-                                                        src={member.imageUrl} 
-                                                        alt={member.memberName} 
-                                                        className="h-full w-full object-cover"
-                                                    />
-                                                ) : (
-                                                    <div className="h-full w-full flex items-center justify-center bg-blue-100 text-blue-500">
-                                                        <span className="text-xl font-bold">
-                                                            {member.memberName.charAt(0)}
-                                                        </span>
-                                                    </div>
-                                                )}
-                                            </div>
-                                            <div className="flex-1 min-w-0">
-                                                <h4 className="text-sm font-medium text-gray-900 truncate">{member.memberName}</h4>
-                                                <p className="text-xs text-gray-500 truncate">{member.email}</p>
-                                                <div className="mt-1 inline-block bg-blue-100 text-blue-800 text-xs px-2 py-0.5 rounded">
-                                                    {member.role}
+                    ) : eventsError ? (
+                        <div className="alert alert-danger">{eventsError}</div>
+                    ) : clubEvents.length === 0 ? (
+                        <div className="text-center py-4">
+                            <p className="mb-0">No events available for this club.</p>
+                        </div>
+                    ) : (
+                        <div className="row g-4">
+                            {clubEvents.map((event) => {
+                                const eventStatus = getEventStatus(event);
+                                const statusColor = getStatusBadgeColor(eventStatus);
+                                const likesCount = event.like?.membersLike?.length || 0;
+                                const dislikesCount = event.like?.membersDislike?.length || 0;
+                                const commentsCount = event.comments?.length || 0;
+                                
+                                return (
+                                    <div key={event.eventId} className="col-md-6">
+                                        <div className="card h-100 shadow-sm border-0 rounded-3">
+                                            <div className="position-relative">
+                                                <img 
+                                                    src={event.eventImageUrl} 
+                                                    alt={event.eventName}
+                                                    className="card-img-top"
+                                                    style={{ height: '180px', objectFit: 'cover' }}
+                                                    onError={(e) => {
+                                                        e.target.src = 'https://via.placeholder.com/300x180?text=Event';
+                                                    }}
+                                                />
+                                                <div className="position-absolute top-0 start-0 m-2">
+                                                    <span className="badge" style={{ backgroundColor: statusColor }}>
+                                                        {eventStatus.charAt(0).toUpperCase() + eventStatus.slice(1)}
+                                                    </span>
                                                 </div>
+                                                <button 
+                                                    className="btn btn-danger btn-sm position-absolute top-0 end-0 m-2"
+                                                    onClick={() => handleDeleteEvent(event.eventId)}
+                                                >
+                                                    <FaTrash />
+                                                </button>
                                             </div>
-                                        </div>
-                                    ))}
-                                </div>
-                            )}
-                        </div>
-                    </div>
-                </div>
-            )}
-
-            {/* Club Events Modal */}
-            {showEvents && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-                    <div className="bg-white rounded-lg shadow-lg w-full max-w-4xl max-h-[90vh] overflow-hidden">
-                        <div className="bg-gradient-to-r from-green-500 to-teal-600 p-4 flex justify-between items-center">
-                            <h2 className="text-white text-xl font-bold">{selectedClub?.clubName} - Events</h2>
-                            <button 
-                                onClick={closeModal}
-                                className="text-white hover:bg-white hover:bg-opacity-20 rounded-full p-1"
-                            >
-                                <X size={24} />
-                            </button>
-                        </div>
-                        
-                        <div className="p-6 overflow-y-auto max-h-[calc(90vh-80px)]">
-                            {loadingEvents ? (
-                                <div className="flex items-center justify-center py-12">
-                                    <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-green-500"></div>
-                                </div>
-                            ) : clubEvents.length === 0 ? (
-                                <div className="text-center py-8 bg-gray-50 rounded-lg">
-                                    <p className="text-gray-500">No events found for this club</p>
-                                </div>
-                            ) : (
-                                <div className="grid grid-cols-1 gap-4">
-                                    {clubEvents.map((event) => (
-                                        <div 
-                                            key={event.eventId} 
-                                            className="bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden"
-                                        >
-                                            <div className="flex flex-col md:flex-row">
-                                                {event.eventImageUrl && (
-                                                    <div className="md:w-1/3 h-48 md:h-auto bg-gray-200">
-                                                        <img 
-                                                            src={event.eventImageUrl} 
-                                                            alt={event.eventName} 
-                                                            className="w-full h-full object-cover"
-                                                            onError={(e) => {
-                                                                e.target.onerror = null;
-                                                                e.target.src = '/placeholder-image.png';
-                                                            }}
-                                                        />
-                                                    </div>
-                                                )}
-                                                <div className={`p-4 flex-1 ${!event.eventImageUrl ? 'md:w-full' : 'md:w-2/3'}`}>
-                                                    <div className="flex justify-between items-start">
-                                                        <div>
-                                                            <h3 className="text-xl font-bold text-gray-900 mb-1">{event.eventName}</h3>
-                                                            <span className="inline-block bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full mb-3">
-                                                                {event.eventType}
-                                                            </span>
-                                                        </div>
-                                                        <button 
-                                                            onClick={() => handleDeleteEvent(event.eventId)}
-                                                            className="p-2 text-red-500 hover:bg-red-50 rounded-full transition-colors"
-                                                            title="Delete Event"
-                                                        >
-                                                            <Trash2 size={18} />
-                                                        </button>
-                                                    </div>
-                                                    
-                                                    <div className="space-y-2 text-sm text-gray-600">
-                                                        <div className="flex items-center">
-                                                            <Calendar size={16} className="mr-2 text-gray-400" />
-                                                            <span>{formatDate(event.scheduledDate)}</span>
-                                                        </div>
-                                                        <div className="flex items-center">
-                                                            <Clock size={16} className="mr-2 text-gray-400" />
+                                            <div className="card-body">
+                                                <h5 className="card-title fw-bold">{event.eventName}</h5>
+                                                <div className="d-flex align-items-center mb-2 text-muted small">
+                                                    <FaCalendarAlt className="me-1" />
+                                                    <span>{formatDate(event.scheduledDate)}</span>
+                                                    {event.scheduledTime && (
+                                                        <>
+                                                            <FaClock className="ms-2 me-1" />
                                                             <span>{formatTime(event.scheduledTime)}</span>
-                                                        </div>
-                                                        <div className="flex items-center">
-                                                            <Map size={16} className="mr-2 text-gray-400" />
-                                                            <span>{event.eventLocation}</span>
-                                                        </div>
+                                                        </>
+                                                    )}
+                                                </div>
+                                                {event.eventLocation && (
+                                                    <div className="d-flex align-items-center mb-2 text-muted small">
+                                                        <FaMapMarkerAlt className="me-1" />
+                                                        <span>{event.eventLocation}</span>
                                                     </div>
-                                                    
-                                                    <div className="mt-4 flex items-center text-sm text-gray-500">
-                                                        <span className="flex items-center mr-4">
-                                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4 mr-1">
-                                                                <path d="M7.493 18.75c-.425 0-.82-.236-.975-.632A7.48 7.48 0 016 15.375c0-1.75.599-3.358 1.602-4.634.151-.192.373-.309.6-.397.473-.183.89-.514 1.212-.924a9.042 9.042 0 012.861-2.4c.723-.384 1.35-.956 1.653-1.715a4.498 4.498 0 00.322-1.672V3a.75.75 0 01.75-.75 2.25 2.25 0 012.25 2.25c0 1.152-.26 2.243-.723 3.218-.266.558.107 1.282.725 1.282h3.126c1.026 0 1.945.694 2.054 1.715.045.422.068.85.068 1.285a11.95 11.95 0 01-2.649 7.521c-.388.482-.987.729-1.605.729H14.23c-.483 0-.964-.078-1.423-.23l-3.114-1.04a4.501 4.501 0 00-1.423-.23h-.777zM2.331 10.977a11.969 11.969 0 00-.831 4.398 12 12 0 00.52 3.507c.26.85 1.084 1.368 1.973 1.368H4.9c.445 0 .72-.498.523-.898a8.963 8.963 0 01-.924-3.977c0-1.708.476-3.305 1.302-4.666.245-.403-.028-.959-.5-.959H4.25c-.832 0-1.612.453-1.918 1.227z" />
-                                                            </svg>
-                                                            {event.like && event.like.likeCount || 0}
+                                                )}
+                                                <p className="card-text" style={{ 
+                                                    overflow: 'hidden', 
+                                                    textOverflow: 'ellipsis',
+                                                    display: '-webkit-box',
+                                                    WebkitLineClamp: 3,
+                                                    WebkitBoxOrient: 'vertical'
+                                                }}>
+                                                    {event.description || "No description available."}
+                                                </p>
+                                                <div className="d-flex justify-content-between align-items-center mt-3">
+                                                    <div className="small text-muted">
+                                                        Published by: {event.publisherName || 'Unknown'}
+                                                    </div>
+                                                    <div className="d-flex gap-3">
+                                                        <span className="d-flex align-items-center small text-muted">
+                                                            <FaThumbsUp className="me-1 text-primary" />
+                                                            {likesCount}
                                                         </span>
-                                                        <span className="flex items-center">
-                                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4 mr-1">
-                                                                <path fillRule="evenodd" d="M4.804 21.644A6.707 6.707 0 006 21.75a6.721 6.721 0 003.583-1.029c.774.182 1.584.279 2.417.279 5.322 0 9.75-3.97 9.75-9 0-5.03-4.428-9-9.75-9s-9.75 3.97-9.75 9c0 2.409 1.025 4.587 2.674 6.192.232.226.277.428.254.543a3.73 3.73 0 01-.814 1.686.75.75 0 00.44 1.223zM8.25 10.875a1.125 1.125 0 100 2.25 1.125 1.125 0 000-2.25zM10.875 12a1.125 1.125 0 112.25 0 1.125 1.125 0 01-2.25 0zm4.875-1.125a1.125 1.125 0 100 2.25 1.125 1.125 0 000-2.25z" clipRule="evenodd" />
-                                                            </svg>
-                                                            {event.comments ? event.comments.length : 0}
+                                                        <span className="d-flex align-items-center small text-muted">
+                                                            <FaThumbsDown className="me-1 text-danger" />
+                                                            {dislikesCount}
+                                                        </span>
+                                                        <span className="d-flex align-items-center small text-muted">
+                                                            <FaComment className="me-1 text-info" />
+                                                            {commentsCount}
                                                         </span>
                                                     </div>
                                                 </div>
+                                                {event.eventType && (
+                                                    <div className="mt-2">
+                                                        <span className="badge bg-secondary">{event.eventType}</span>
+                                                    </div>
+                                                )}
                                             </div>
                                         </div>
-                                    ))}
-                                </div>
-                            )}
+                                    </div>
+                                );
+                            })}
                         </div>
-                    </div>
-                </div>
-            )}
+                    )}
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={closeModal}>
+                        Close
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+
+            <style jsx>{`
+                .hover-elevation:hover {
+                    transform: translateY(-5px);
+                    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1) !important;
+                }
+                @media (max-width: 768px) {
+                    .display-4 {
+                        font-size: 2rem;
+                    }
+                }
+                .fa-spin {
+                    animation: fa-spin 2s infinite linear;
+                }
+                @keyframes fa-spin {
+                    0% {
+                        transform: rotate(0deg);
+                    }
+                    100% {
+                        transform: rotate(360deg);
+                    }
+                }
+            `}</style>
         </div>
     );
 }
