@@ -14,6 +14,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -101,20 +102,11 @@ public class ClubAdminServiceImpl implements ClubAdminService {
 
     @Override
     public List<ClubAdmin> getAllClubAdminsByClubId(String clubId) {
+            Optional<Club> optionalClub = clubRepository.findById(clubId);
 
-        Optional<Club> optionalClub = clubRepository.findById(clubId);
-
-        if (optionalClub.isPresent()) {
-
-            List<ClubAdmin> clubAdmins = new ArrayList<>();
-
-            for (int i = 0; i < getAllClubAdmins().size(); i++) {
-                if (getAllClubAdmins().get(i).getClubId().equals(clubId)) {
-                    clubAdmins.add(getAllClubAdmins().get(i));
-                }
+            if (optionalClub.isPresent()) {
+                return clubAdminRepository.findClubAdminByClubId(clubId);  // Use repository method to directly
             }
-            return clubAdmins;
-        }
 
         else {
             throw new RuntimeException("Club not found with clubId: " + clubId);
