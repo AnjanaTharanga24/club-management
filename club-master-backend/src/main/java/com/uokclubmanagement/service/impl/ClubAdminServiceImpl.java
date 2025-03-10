@@ -160,9 +160,9 @@ public class ClubAdminServiceImpl implements ClubAdminService {
             BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder(8);
             String newEncodedPassword = bCryptPasswordEncoder.encode(clubAdmin.getPassword());
             clubAdminToUpdate.setPassword(newEncodedPassword);
+            clubAdminRepository.save(clubAdminToUpdate);
+            return clubAdminToUpdate;
         }
-        clubAdminRepository.save(clubAdmin);
-        return clubAdmin;
     }
 }
 
