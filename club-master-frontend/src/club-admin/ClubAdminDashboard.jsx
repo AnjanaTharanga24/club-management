@@ -7,6 +7,8 @@ import ViewCLubAdminEvents from './ViewCLubAdminEvents';
 import Clubadmin from '../components/ClubAdmin';
 import ViewClubAdminNews from './ViewClubAdminNews';
 import ViewCLubAdminProjects from './ViewCLubAdminProjects';
+import ViewClubAdminAwards from './ViewClubAdminAwards';
+import ClubAdminProfile from './ClubAdminProfile';
 
 export default function ClubAdminDashboard() {
      const [currentView, setCurrentView] = useState("default");
@@ -32,6 +34,10 @@ export default function ClubAdminDashboard() {
             return <ViewClubAdminNews/>
           case 'viewParojects':
             return <ViewCLubAdminProjects/>
+          case 'viewAwards':
+            return <ViewClubAdminAwards/>
+          case 'viewProfile':
+            return <ClubAdminProfile/>
           default:
             return (
               <div className="welcome-container">
