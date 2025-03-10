@@ -1,8 +1,12 @@
 import React, { useState } from 'react'
 import Navbar from '../components/Navbar'
-import Clubadmin from '../components/Clubadmin'
+// import Clubadmin from '../components/Clubadmin'
 import CreateClubAdminForm from './CreateClubAdminForm';
 import ViewAllClubAdmin from './ViewAllClubAdmin';
+import ViewCLubAdminEvents from './ViewCLubAdminEvents';
+import Clubadmin from '../components/ClubAdmin';
+import ViewClubAdminNews from './ViewClubAdminNews';
+import ViewCLubAdminProjects from './ViewCLubAdminProjects';
 
 export default function ClubAdminDashboard() {
      const [currentView, setCurrentView] = useState("default");
@@ -22,6 +26,12 @@ export default function ClubAdminDashboard() {
             return <CreateClubAdminForm />;
           case 'viewAllClubAdmin':
             return <ViewAllClubAdmin/>;
+          case 'viewEvents':
+            return <ViewCLubAdminEvents/>
+          case 'viewNews':
+            return <ViewClubAdminNews/>
+          case 'viewParojects':
+            return <ViewCLubAdminProjects/>
           default:
             return (
               <div className="welcome-container">
@@ -32,6 +42,7 @@ export default function ClubAdminDashboard() {
         }
       };
   return (
+
     <div>
         <Navbar/>
         <Clubadmin changeView={changeView}/>

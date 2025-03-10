@@ -6,25 +6,14 @@ import axios from 'axios';
 import { UserContext } from '../common/UserContext';
 
 const UserProfile = () => {
-  // ... (previous state and handlers remain the same)
-  const [isEditing, setIsEditing] = useState(false);
-  const [userInfo, setUserInfo] = useState({
-    firstName: "John",
-    lastName: "Doe",
-    username: "johndoe",
-    email: "john.doe@example.com",
-    phone: "+1 234 567 8900",
-    faculty: "Computer Science",
-    hometown: "San Francisco",
-    profilePic: "/api/placeholder/150/150"
-  });
   
-  const {user} = useContext(UserContext);
-  const [userDetails,setUserDetails] = useState();
+  const { user } = useContext(UserContext);
+  const [userDetails, setUserDetails] = useState(null);
+  const [isEditing, setIsEditing] = useState(false);
 
-  useEffect(()=>{
+  useEffect(() => {
     handleGetUserById();
-  })
+  }, []);
 
   const handleGetUserById = async () => {
     try {
@@ -34,19 +23,25 @@ const UserProfile = () => {
     } catch (error) {
       console.log('Error while getting user details', error);
     }
-  }
+  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setUserInfo(prev => ({
+    setUserDetails(prev => ({
       ...prev,
       [name]: value
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsEditing(false);
+    try {
+      const response = await axios.put(`http://localhost:7000/api/v1/member/updateMember-memberId/${user.id}`, userDetails);
+      console.log(response.data);
+      setIsEditing(false);
+    } catch (error) {
+      console.log('Error while updating user details', error);
+    }
   };
 
   const handleImageUpload = (e) => {
@@ -54,29 +49,31 @@ const UserProfile = () => {
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        setUserInfo(prev => ({
+        setUserDetails(prev => ({
           ...prev,
-          profilePic: reader.result
+          memberImageUrl: reader.result
         }));
       };
       reader.readAsDataURL(file);
     }
   };
 
+  if (!userDetails) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <div
-    className="min-h-screen bg-cover bg-cover pt-20"
-    style={{ backgroundImage: "url('/user.jpg')" }}
-  >
-      < Dashboard />
+      className="min-h-screen bg-cover bg-cover pt-20"
+      style={{ backgroundImage: "url('/user.jpg')" }}
+    >
+      <Dashboard />
       <Sidebar />
        
       <div className="max-w-3xl mx-auto bg-white rounded-lg shadow-xl hover:shadow-2xl transition-shadow duration-300 mt-5 ">
        
         <div className="bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-t-lg p-6">
-      
           <h1 className="text-3xl font-bold text-center">Profile Settings</h1>
-          
         </div>
 
         <div className="p-8">
@@ -86,7 +83,8 @@ const UserProfile = () => {
               <div className="relative group">
                 <div className="w-40 h-40 rounded-full overflow-hidden bg-gradient-to-r from-blue-300 to-purple-400 ring-4 ring-white shadow-xl">
                   <img 
-                    src={userInfo.profilePic} 
+                    src={userDetails.memberImageUrl || '/default-profile.png'}
+                    alt="Profile"
                     className="w-full h-full object-cover group-hover:opacity-80 transition-opacity duration-300"
                   />
                 </div>
@@ -116,7 +114,7 @@ const UserProfile = () => {
                   <input
                     type="text"
                     name="firstName"
-                    value={userInfo.firstName}
+                    value={userDetails.firstName || ''}
                     onChange={handleInputChange}
                     disabled={!isEditing}
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
@@ -129,7 +127,7 @@ const UserProfile = () => {
                   <input
                     type="text"
                     name="lastName"
-                    value={userInfo.lastName}
+                    value={userDetails.lastName || ''}
                     onChange={handleInputChange}
                     disabled={!isEditing}
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
@@ -151,8 +149,8 @@ const UserProfile = () => {
                   </label>
                   <input
                     type="text"
-                    name="username"
-                    value={userInfo.username}
+                    name="userName"
+                    value={userDetails.userName || ''}
                     onChange={handleInputChange}
                     disabled={!isEditing}
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500"
@@ -165,7 +163,7 @@ const UserProfile = () => {
                   <input
                     type="text"
                     name="faculty"
-                    value={userInfo.faculty}
+                    value={userDetails.faculty || ''}
                     onChange={handleInputChange}
                     disabled={!isEditing}
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500"
@@ -188,7 +186,7 @@ const UserProfile = () => {
                   <input
                     type="email"
                     name="email"
-                    value={userInfo.email}
+                    value={userDetails.email || ''}
                     onChange={handleInputChange}
                     disabled={!isEditing}
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -200,8 +198,8 @@ const UserProfile = () => {
                   </label>
                   <input
                     type="tel"
-                    name="phone"
-                    value={userInfo.phone}
+                    name="phoneNo"
+                    value={userDetails.phoneNo || ''}
                     onChange={handleInputChange}
                     disabled={!isEditing}
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -223,7 +221,7 @@ const UserProfile = () => {
                 <input
                   type="text"
                   name="hometown"
-                  value={userInfo.hometown}
+                  value={userDetails.hometown || ''}
                   onChange={handleInputChange}
                   disabled={!isEditing}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"

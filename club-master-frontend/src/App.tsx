@@ -80,6 +80,7 @@ function App() {
       <Route path="myNews" element={<ViewAllNews/>}/>
       <Route path="clubAdmin" element={<ClubAdminDashboard/>}/>
 
+
      
      </Routes>
     </BrowserRouter>

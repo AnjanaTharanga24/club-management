@@ -2,7 +2,7 @@ import React from "react";
 import "./RotractFooter.css"; // Updated file name to match convention
 import { Link } from "react-router-dom";
 
-const Rotractfooter = ({clubName,clubVision}) => {
+const Rotractfooter = ({clubImage,clubName,clubVision,clubEmail}) => {
 
   return (
     <footer className="rotract-footer">
@@ -10,9 +10,10 @@ const Rotractfooter = ({clubName,clubVision}) => {
         {/* Rotaract Club Section */}
         <div className="rotract-footer-column" style={{ marginRight: "20px" }}>
           <img
-            src="rotractuok.png"
+            src={clubImage}
             alt="Rotaract Club Logo"
             className="rotractf-logo"
+            style={{ width: "200px", height: "100px" }}
           />
           <p className="rotract-text p-3">
             {clubVision}
@@ -24,7 +25,7 @@ const Rotractfooter = ({clubName,clubVision}) => {
           <h4 className="rotract-heading">Contact {clubName} Us</h4>
           <p className="rotract-text">
             Need help or have a question? <br />
-            Contact us at: <a href="mailto:info@racuok.lk">info@racuok.lk</a>
+            Contact us at: <a href="mailto:info@racuok.lk">{clubEmail}</a>
           </p>
         </div>
 

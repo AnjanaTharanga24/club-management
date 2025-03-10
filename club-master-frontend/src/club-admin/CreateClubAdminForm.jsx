@@ -179,25 +179,6 @@ export default function CreateClubAdminForm() {
               />
             </div>
 
-            <div className="form-group">
-              <label
-                htmlFor="confirmPassword"
-                className="block text-sm font-medium text-gray-700 mb-1 flex items-center mb-3"
-              >
-                <FiLock className="mr-1 text-blue-600" />
-                Confirm Password
-              </label>
-              <input
-                type="password"
-                id="confirmPassword"
-                name="confirmPassword"
-                value={formData.confirmPassword}
-                onChange={handleChange}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
-                placeholder="Confirm password"
-                required
-              />
-            </div>
           </div>
 
           <div className="flex justify-end space-x-3 mt-8">
