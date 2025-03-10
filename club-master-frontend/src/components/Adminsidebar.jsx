@@ -65,11 +65,11 @@ const Adminsidebar = ({ changeView }) => {
           </ul>
         );
       case "User Help":
-        return <ul className="administrator-submenu"><li><FaPlus className="submenu-icon" /> Get all users messages</li></ul>;
+        return <ul className="administrator-submenu"><li onClick={() => changeView('userHelp')}><FaPlus className="submenu-icon"  /> Get all users messages</li></ul>;
       case "Awards":
         return <ul className="administrator-submenu"><li><FaPlus className="submenu-icon" /> View all Events by Club ID </li></ul>;
       case "Executive Panel":
-        return <ul className="administrator-submenu"><li><FaPlus className="submenu-icon" /> View Executive Panel</li></ul>;
+        return <ul className="administrator-submenu"><li onClick={() => changeView('exPanel')}><FaPlus className="submenu-icon" /> View Executive Panel</li></ul>;
       default:
         return null;
     }
