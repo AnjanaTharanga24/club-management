@@ -11,6 +11,10 @@ import ViewClubDetails from './ViewClubDetails';
 import UserHelp from './UserHelp';
 import ExecutivePanel from './ExecutivePanel';
 import ViewAllEvents from './ViewAllEvents';
+import ViewAdminNews from './ViewAdminNews';
+import ViewAdminProjects from './ViewAdminProjects';
+import ViewAdminAwards from './ViewAdminAwards';
+
 
 export default function MainAdminDashboard() {
   const [currentView, setCurrentView] = useState("default");
@@ -43,6 +47,13 @@ export default function MainAdminDashboard() {
         return <ExecutivePanel/>
       case 'viewEvents':
         return <ViewAllEvents/>
+      case 'viewNews':
+        return <ViewAdminNews/>
+      case 'viewProjects':
+        return <ViewAdminProjects/>
+      case 'viewAwards':
+        return <ViewAdminAwards/>
+       
       default:
         return (
           <div className="welcome-container">

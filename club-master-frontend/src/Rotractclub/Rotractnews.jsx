@@ -21,101 +21,98 @@ const RotaractNewsFeed = () => {
     }
   }, [clubId]);
 
-  useEffect(() => {
-    const initialInteractions = {};
-    news.forEach((item) => {
-      initialInteractions[item.newsId] = {
-        liked: item.like?.membersLike?.includes(memberId) || false,
-        disliked: item.like?.membersDislike?.includes(memberId) || false,
-      };
-    });
-    setInteractions(initialInteractions);
-  }, [news, memberId]);
-
-  // Fetch news by club ID
   const getNewsByClub = async () => {
     try {
       const response = await axios.get(
         `http://localhost:7000/api/v1/news/${clubId}/getAllNews`
       );
-      console.log("Fetched News:", response.data); // Debugging
+      console.log("Fetched News:", response.data);
       setNews(response.data);
+
+      // Initialize interactions state
+      const initialInteractions = {};
+      response.data.forEach((item) => {
+        initialInteractions[item.newsId] = {
+          liked: item.like?.membersLike?.includes(memberId),
+          disliked: item.like?.membersDislike?.includes(memberId),
+        };
+      });
+      setInteractions(initialInteractions);
     } catch (error) {
       console.error('Error while getting news:', error);
     }
   };
 
-  // Handle like action
   const handleLike = async (id) => {
     try {
       if (!clubId || !memberId) return;
 
-      if (interactions[id]?.liked) {
+      const hasLiked = interactions[id]?.liked;
+      const hasDisliked = interactions[id]?.disliked;
+
+      if (hasLiked) {
         await axios.post(
           `http://localhost:7000/api/v1/like/${id}/removeLikeNews/${clubId}/${memberId}`
         );
-        setInteractions((prev) => ({
-          ...prev,
-          [id]: { liked: false, disliked: prev[id]?.disliked || false },
-        }));
       } else {
         await axios.post(
           `http://localhost:7000/api/v1/like/${id}/addLikeNews/${clubId}/${memberId}`
         );
-        if (interactions[id]?.disliked) {
+        if (hasDisliked) {
           await axios.post(
-            `http://localhost:7000/api/v1/like/${id}/removeLikeNews/${clubId}/${memberId}`
+            `http://localhost:7000/api/v1/dislike/${id}/removeDislikeNews/${clubId}/${memberId}`
           );
         }
-        setInteractions((prev) => ({
-          ...prev,
-          [id]: { liked: true, disliked: false },
-        }));
       }
 
-      // Refresh news data after interaction
+      // Update interactions state
+      setInteractions((prev) => ({
+        ...prev,
+        [id]: { liked: !hasLiked, disliked: false },
+      }));
+
+      // Refresh news data
       getNewsByClub();
     } catch (error) {
       console.error('Error while handling like:', error);
     }
   };
 
-  // Handle dislike action
   const handleDislike = async (id) => {
     try {
       if (!clubId || !memberId) return;
 
-      if (interactions[id]?.disliked) {
+      const hasDisliked = interactions[id]?.disliked;
+      const hasLiked = interactions[id]?.liked;
+
+      if (hasDisliked) {
         await axios.post(
-          `http://localhost:7000/api/v1/like/${id}/removeLikeNews/${clubId}/${memberId}`
+          `http://localhost:7000/api/v1/dislike/${id}/removeDislikeNews/${clubId}/${memberId}`
         );
-        setInteractions((prev) => ({
-          ...prev,
-          [id]: { disliked: false, liked: prev[id]?.liked || false },
-        }));
       } else {
         await axios.post(
-          `http://localhost:7000/api/v1/like/${id}/addLikeNews/${clubId}/${memberId}`
+          `http://localhost:7000/api/v1/dislike/${id}/addDislikeNews/${clubId}/${memberId}`
         );
-        if (interactions[id]?.liked) {
+        if (hasLiked) {
           await axios.post(
             `http://localhost:7000/api/v1/like/${id}/removeLikeNews/${clubId}/${memberId}`
           );
         }
-        setInteractions((prev) => ({
-          ...prev,
-          [id]: { disliked: true, liked: false },
-        }));
       }
 
-      // Refresh news data after interaction
+      // Update interactions state
+      setInteractions((prev) => ({
+        ...prev,
+        [id]: { disliked: !hasDisliked, liked: false },
+      }));
+
+      // Refresh news data
       getNewsByClub();
     } catch (error) {
       console.error('Error while handling dislike:', error);
     }
   };
 
-  // Format date and time
   const formatDateTime = (dateArray, timeArray) => {
     if (!dateArray || !timeArray) return "Unknown";
     const date = new Date(
@@ -129,21 +126,19 @@ const RotaractNewsFeed = () => {
     return date.toLocaleString();
   };
 
-  const toCamelCase = (str) => {
-    return str
-      .split(" ")
-      .map((word) => word.charAt(0).toUpperCase() + word.slice(1)) 
-      .join("");
-  };
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50">
-      <Rotractnav />
+      <Rotractnav
+        clubNewsPage={`/rotractnews?clubId=${clubId}&clubName=${clubName}`}
+        clubEventPage={`/rotractevent?clubId=${clubId}&clubName=${clubName}`}
+        clubName={clubName}
+        clubId={clubId}
+      />
       <div className="max-w-2xl mx-auto pt-32">
         <div className="bg-white/30 backdrop-blur-sm rounded-xl mb-4">
           <div className="px-4 py-6">
             <h1 className="text-4xl font-bold text-center bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-            {clubName} News Feed
+              {clubName} News Feed
             </h1>
             <div className="mt-1 w-24 h-1 mx-auto bg-gradient-to-r from-blue-600 to-purple-600 rounded-full"></div>
           </div>
@@ -164,9 +159,6 @@ const RotaractNewsFeed = () => {
                   <div className="flex items-center">
                     <span className="font-bold text-lg text-gray-900">
                       {item.publisherName}
-                    </span>
-                    <span className="ml-2 text-gray-600 font-medium">
-                      @{item.publisherName}
                     </span>
                     <span className="mx-2 text-gray-600">·</span>
                     <span className="text-gray-600 font-medium">

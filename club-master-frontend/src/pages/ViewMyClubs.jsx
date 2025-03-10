@@ -135,20 +135,20 @@ export default function ViewMyClubs() {
                   '--i': index
                 }}
               >
-                <div className="club-logo">
-                  {club.clubLogoUrl ? (
-                    <img 
-                      src={club.clubLogoUrl} 
-                      alt={`${club.clubName} logo`}
-                      className="club-logo-img"
-                    />
-                  ) : (
-                    <div className="club-logo-placeholder">
-                      {getInitials(club.clubName)}
-                    </div>
-                  )}
-                </div>
                 <div className="club-content">
+                  <div className="club-logo">
+                    {club.clubLogoUrl ? (
+                      <img 
+                        src={club.clubLogoUrl} 
+                        alt={`${club.clubName} logo`}
+                        className="club-logo-img"
+                      />
+                    ) : (
+                      <div className="club-logo-placeholder">
+                        {getInitials(club.clubName)}
+                      </div>
+                    )}
+                  </div>
                   <div className="club-name">{club.clubName}</div>
                   <div className="club-address">
                     <i className="bi bi-geo-alt-fill"></i>
