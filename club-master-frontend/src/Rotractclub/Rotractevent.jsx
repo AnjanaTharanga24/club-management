@@ -42,7 +42,6 @@ const RotracEvent = () => {
       );
       console.log("Fetched Events:", response.data);
 
-      // For each event, fetch its comments
       const eventsWithComments = await Promise.all(
         response.data.map(async (event) => {
           const commentsResponse = await axios.get(
@@ -146,34 +145,6 @@ const RotracEvent = () => {
     }
   };
 
-  const getEventLikeCount = async (eventId) => {
-    if (!memberId || !clubId) return 0;
-
-    try {
-      const response = await axios.get(
-        `http://localhost:7000/api/v1/like/${eventId}/likeCount/${clubId}/${memberId}`
-      );
-      return response.data;
-    } catch (error) {
-      console.log("Error getting like count", error);
-      return 0;
-    }
-  };
-
-  const getEventDislikeCount = async (eventId) => {
-    if (!memberId || !clubId) return 0;
-
-    try {
-      const response = await axios.get(
-        `http://localhost:7000/api/v1/like/${eventId}/dislikeCount/${clubId}/${memberId}`
-      );
-      return response.data;
-    } catch (error) {
-      console.log("Error getting dislike count", error);
-      return 0;
-    }
-  };
-
   const handleAddComment = async (eventId) => {
     if (!newComment.trim() || !memberId) return;
 
@@ -182,7 +153,7 @@ const RotracEvent = () => {
         comment: newComment,
       };
 
-      const response = await axios.post(
+      await axios.post(
         `http://localhost:7000/api/v1/comment/${eventId}/saveComment/${clubId}/${memberId}`,
         commentObj
       );
@@ -204,7 +175,7 @@ const RotracEvent = () => {
         comment: editText,
       };
 
-      const response = await axios.put(
+      await axios.put(
         `http://localhost:7000/api/v1/comment/${memberId}/updateComment/${commentId}`,
         commentObj
       );
@@ -240,13 +211,6 @@ const RotracEvent = () => {
     setEditText("");
   };
 
-  const handleShare = (eventId) => {
-    const event = events.find((e) => e.eventId === eventId);
-    if (event) {
-      alert(`Sharing event: ${event.eventName}`);
-    }
-  };
-
   const formatDateTime = (dateArray, timeArray) => {
     if (!dateArray || !timeArray) return "Unknown";
     const date = new Date(
@@ -273,13 +237,18 @@ const RotracEvent = () => {
   const toCamelCase = (str) => {
     return str
       .split(" ")
-      .map((word) => word.charAt(0).toUpperCase() + word.slice(1)) 
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
       .join("");
   };
 
   return (
     <div>
-      <Rotractnav />
+      <Rotractnav
+        clubNewsPage={`/rotractnews?clubId=${clubId}&clubName=${clubName}`}
+        clubEventPage={`/rotractevent?clubId=${clubId}&clubName=${clubName}`}
+        clubName={clubName}
+        clubId={clubId}
+      />
       <div className="min-h-screen bg-gradient-to-tl from-indigo-900 via-purple-900 to-pink-900">
         <div className="max-w-6xl mx-auto p-8 pt-32">
           <div className="text-center mb-16 mt-8">
@@ -304,7 +273,6 @@ const RotracEvent = () => {
                   <div className="relative p-6">
                     <div className="grid md:grid-cols-2 gap-8">
                       <div className="space-y-6">
-                        {/* Event Image */}
                         <div className="w-full aspect-video bg-gray-700/50 rounded-xl flex items-center justify-center text-cyan-100 overflow-hidden">
                           <img
                             src={event.eventImageUrl}
@@ -341,8 +309,7 @@ const RotracEvent = () => {
 
                         <div className="space-y-4">
                           <h3 className="text-xl font-semibold text-cyan-300">
-                            Comments (
-                            {event.comments ? event.comments.length : 0})
+                            Comments ({event.comments ? event.comments.length : 0})
                           </h3>
                           <div className="space-y-4 max-h-64 overflow-y-auto pr-4">
                             {event.comments &&
