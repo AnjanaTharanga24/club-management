@@ -86,7 +86,7 @@ public class ClubAdminServiceImpl implements ClubAdminService {
                 clubAdmin.setEmail(member.getEmail());
 
                 // Encode password
-                BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+                BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder(8);
                 String encodedPassword = bCryptPasswordEncoder.encode(clubAdmin.getPassword());
                 clubAdmin.setPassword(encodedPassword);
             }
@@ -155,7 +155,7 @@ public class ClubAdminServiceImpl implements ClubAdminService {
         else {
             ClubAdmin clubAdminToUpdate = optionalClubAdmin.get();
 
-            BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+            BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder(8);
             String newEncodedPassword = bCryptPasswordEncoder.encode(clubAdmin.getPassword());
             clubAdminToUpdate.setPassword(newEncodedPassword);
         }

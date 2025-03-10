@@ -134,7 +134,7 @@ public class MemberServiceImpl implements MemberService {
             existingMember.setPhoneNo(member.getPhoneNo());
         }
         if (member.getPassword() != null) {
-            BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+            BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder(8);
             String newEncodedPassword = bCryptPasswordEncoder.encode(member.getPassword());
             existingMember.setPassword(newEncodedPassword);
         }

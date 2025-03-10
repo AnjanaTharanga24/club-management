@@ -29,6 +29,12 @@ import ViewMyClubs from "./pages/ViewMyClubs";
 import MainAdminDashboard from "./admin/MainAdminDashboard";
 // import Clubadmin from "./components/Clubadmin";
 import ClubAdminDashboard from "./club-admin/ClubAdminDashboard";
+import ViewMyOngoingEvents from "./pages/ViewMyOngoingEvents";
+import ViewAllMyOngoingEvents from "./pages/ViewAllMyOngoingEvents";
+import ViewMyUpComingEvents from "./pages/ViewMyUpComingEvents";
+import ViewMyPastEvents from "./pages/ViewMyPastEvents";
+import ViewMyNews from "./pages/ViewMyNews";
+import ViewAllNews from "./pages/ViewAllNews";
 // import ViewMyEvents from "./pages/ViewMyEvents";
 
 
@@ -66,7 +72,12 @@ function App() {
       {/* <Route path="newclub" element={<Newclub/>}/>  */}
       <Route path="myclub" element={<ViewMyClubs/>}/>
       <Route path="mainAdmin" element={<MainAdminDashboard/>}/>
-      {/* <Route path="myOnGoingEvents" element={<ViewMyOngoingEvents/>}/> */}
+      <Route path="myOnGoingEvents" element={<ViewMyOngoingEvents/>}/>
+      <Route path="myAllOnGoingEvents" element={<ViewAllMyOngoingEvents/>}/>
+      <Route path="myAllUpcomingEvents" element={<ViewMyUpComingEvents/>}/>
+      <Route path="myAllPastEvents" element={<ViewMyPastEvents/>}/>
+      <Route path="myAllMyNews" element={<ViewMyNews/>}/>
+      <Route path="myNews" element={<ViewAllNews/>}/>
       <Route path="clubAdmin" element={<ClubAdminDashboard/>}/>
 
      

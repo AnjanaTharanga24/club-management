@@ -1,12 +1,12 @@
 import React, { useContext, useEffect, useState } from 'react'
 import Navbar from '../components/Navbar'
 import Sidebar from '../components/Sidebar'
-import { useNavigate } from 'react-router-dom';
 import { UserContext } from '../common/UserContext';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
-export default function ViewMyOngoingEvents() {
-  const [clubs, setClubs] = useState([]);
+export default function ViewMyUpComingEvents() {
+    const [clubs, setClubs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [animateIn, setAnimateIn] = useState(false);
@@ -42,7 +42,7 @@ export default function ViewMyOngoingEvents() {
   };
 
   const viewOnGoingEventsOfClub = (clubId) => {
-    navigate(`/myAllOnGoingEvents/?clubId=${clubId}`);
+    navigate(`/myAllOnGoingEvents/?clubId=${clubId}&eventStatus=upcoming-events`);
   };
 
   const getClubColor = (name) => {
@@ -112,71 +112,71 @@ export default function ViewMyOngoingEvents() {
 
   return (
     <div className="app-container">
-      <Navbar />
-      <Sidebar />
-      <div className="main-content ">
-        <div className="clubs-header mt-3 ">
-          <div>
-            <h1>View My Ongoing Events</h1>
-            <p className="subtitle">Explore and manage your On going events</p>
-          </div>
-          
+    <Navbar />
+    <Sidebar />
+    <div className="main-content ">
+      <div className="clubs-header mt-3 ">
+        <div>
+          <h1>View My Up Coming Events</h1>
+          <p className="subtitle">Explore and manage your Up Coming events</p>
         </div>
+        
+      </div>
 
-        {clubs.length > 0 ? (
-          <div className="clubs-grid">
-            {clubs.map((club, index) => (
-              <div
-                key={club.clubId}
-                className={`club-tile ${animateIn ? 'animate-in' : ''}`}
-                style={{ 
-                  background: getClubColor(club.clubName),
-                  '--i': index
-                }}
-              >
-                <div className="club-logo">
-                  {club.clubLogoUrl ? (
-                    <img 
-                      src={club.clubLogoUrl} 
-                      alt={`${club.clubName} logo`}
-                      className="club-logo-img"
-                    />
-                  ) : (
-                    <div className="club-logo-placeholder">
-                      {getInitials(club.clubName)}
-                    </div>
-                  )}
-                </div>
-                <div className="club-content">
-                  <div className="club-name">{club.clubName}</div>
-                  <div className="club-id">ID: {club.clubId}</div>
-                  <div className="club-description">
-                    {truncateText(club.clubDescription, 100)}
+      {clubs.length > 0 ? (
+        <div className="clubs-grid">
+          {clubs.map((club, index) => (
+            <div
+              key={club.clubId}
+              className={`club-tile ${animateIn ? 'animate-in' : ''}`}
+              style={{ 
+                background: getClubColor(club.clubName),
+                '--i': index
+              }}
+            >
+              <div className="club-logo">
+                {club.clubLogoUrl ? (
+                  <img 
+                    src={club.clubLogoUrl} 
+                    alt={`${club.clubName} logo`}
+                    className="club-logo-img"
+                  />
+                ) : (
+                  <div className="club-logo-placeholder">
+                    {getInitials(club.clubName)}
                   </div>
-                </div>
-                <div className="club-actions-btn">
-                  <button className="club-action-btn" onClick={()=> viewOnGoingEventsOfClub(club.clubId)}>
-                    <span>View All Events</span>
-                    <i className="bi bi-arrow-right"></i>
-                  </button>
+                )}
+              </div>
+              <div className="club-content">
+                <div className="club-name">{club.clubName}</div>
+                <div className="club-id">ID: {club.clubId}</div>
+                <div className="club-description">
+                  {truncateText(club.clubDescription, 100)}
                 </div>
               </div>
-            ))}
-          </div>
-        ) : (
-          <div className="no-clubs-container">
-            <div className="no-clubs-message">
-              <i className="bi bi-people"></i>
-              <h3>No clubs found</h3>
-              <p>You are not a member of any clubs yet. Join a club to connect with like-minded individuals and participate in exciting activities.</p>
-              <button className="new-club-btn" style={{ marginTop: '1.5rem' }}>
-                <i className="bi bi-search"></i>
-                <span>Find Clubs</span>
-              </button>
+              <div className="club-actions-btn">
+                <button className="club-action-btn" onClick={()=> viewOnGoingEventsOfClub(club.clubId)}>
+                  <span>View All Events</span>
+                  <i className="bi bi-arrow-right"></i>
+                </button>
+              </div>
             </div>
+          ))}
+        </div>
+      ) : (
+        <div className="no-clubs-container">
+          <div className="no-clubs-message">
+            <i className="bi bi-people"></i>
+            <h3>No clubs found</h3>
+            <p>You are not a member of any clubs yet. Join a club to connect with like-minded individuals and participate in exciting activities.</p>
+            <button className="new-club-btn" style={{ marginTop: '1.5rem' }}>
+              <i className="bi bi-search"></i>
+              <span>Find Clubs</span>
+            </button>
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </div>
+  </div>
   )
 }

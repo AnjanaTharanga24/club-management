@@ -66,7 +66,7 @@ public class MainAdminServiceImpl implements MainAdminService {
             mainAdmin.setMainAdminId(mainAdminId);
 
             // Encode password
-            BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+            BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder(8);
             String encodedPassword = bCryptPasswordEncoder.encode(mainAdmin.getMainAdminPassword());
             mainAdmin.setMainAdminPassword(encodedPassword);
 
@@ -115,7 +115,7 @@ public class MainAdminServiceImpl implements MainAdminService {
             existingMainAdmin.setMainAdminPhone(mainAdmin.getMainAdminPhone());
         }
         if (mainAdmin.getMainAdminPassword() != null) {
-            BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+            BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder(8);
             String newEncodedPassword = bCryptPasswordEncoder.encode(mainAdmin.getMainAdminPassword());
             existingMainAdmin.setMainAdminPassword(newEncodedPassword);
         }
