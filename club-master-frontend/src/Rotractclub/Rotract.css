@@ -768,10 +768,10 @@ color: #0e0101;
 
 /* Main container */
 .pg-container {
-  padding: 80px 40px;
-  max-width: 1280px;
+  padding: 40px 40px;
+  max-width: 2280px;
   margin: 0 auto;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin-right: 200px;
 }
 
 /* Header styling */
