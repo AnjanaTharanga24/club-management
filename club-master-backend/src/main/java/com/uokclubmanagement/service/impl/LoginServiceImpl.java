@@ -9,6 +9,7 @@ import com.uokclubmanagement.repository.MainAdminRepository;
 import com.uokclubmanagement.repository.MemberRepository;
 import com.uokclubmanagement.security.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -26,13 +27,15 @@ public class LoginServiceImpl {
     @Autowired
     private JwtUtil jwtUtil;
 
+    private BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
     public UserDTO login(String username, String password) {
         String role = null;
         String userId = null;
 
         // Check main-admin collection
         MainAdmin mainAdmin = mainAdminRepository.findMainAdminByMainAdminUsername(username);
-        if (mainAdmin != null && mainAdmin.getMainAdminPassword().equals(password)) {
+        if (mainAdmin != null && passwordEncoder.matches(password, mainAdmin.getMainAdminPassword())) {
             role = "MAIN_ADMIN";
             userId = mainAdmin.getMainAdminId();
         }
@@ -40,7 +43,7 @@ public class LoginServiceImpl {
         // Check club-admin collection
         if (role == null) {
             ClubAdmin clubAdmin = clubAdminRepository.findClubAdminByUsername(username);
-            if (clubAdmin != null && clubAdmin.getPassword().equals(password)) {
+            if (clubAdmin != null && passwordEncoder.matches(password, clubAdmin.getPassword())) {
                 role = "CLUB_ADMIN";
                 userId = clubAdmin.getClubAdminId();
             }
@@ -49,7 +52,7 @@ public class LoginServiceImpl {
         // Check member collection
         if (role == null) {
             Member member = memberRepository.findMemberByUserName(username);
-            if (member != null && member.getPassword().equals(password)) {
+            if (member != null && passwordEncoder.matches(password, member.getPassword())) {
                 role = "MEMBER";
                 userId = member.getMemberId();
             }

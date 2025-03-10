@@ -76,6 +76,7 @@ public class ClubServiceImpl implements ClubService {
 
     @Override
     public void deleteClubById(String clubId) {
+
         Optional<Club> deleteClub = clubRepository.findById(clubId);
         if (deleteClub.isPresent()) {
 

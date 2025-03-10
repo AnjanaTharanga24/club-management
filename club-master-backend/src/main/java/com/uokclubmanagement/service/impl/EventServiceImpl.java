@@ -350,9 +350,9 @@ public class EventServiceImpl implements EventService {
         LocalDate currentDate = LocalDate.now();
 
         // Event should display to member before at least three days //
-        LocalDate threeDaysBeforeEventDate = validateDate.getScheduledDate().minusDays(3);
-        if(!currentDate.isBefore(threeDaysBeforeEventDate)){
-            throw new RuntimeException("The event date is not at least three days before the current date");
+        LocalDate twoDaysBeforeEventDate = validateDate.getScheduledDate().minusDays(1);
+        if(!currentDate.isBefore(twoDaysBeforeEventDate)){
+            throw new RuntimeException("The event date is not at least two days before the current date");
         }
 
         // Set publish date and time without seconds

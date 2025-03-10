@@ -10,6 +10,7 @@ import com.uokclubmanagement.repository.MainAdminRepository;
 import com.uokclubmanagement.repository.MemberRepository;
 import com.uokclubmanagement.service.ClubAdminService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -83,7 +84,11 @@ public class ClubAdminServiceImpl implements ClubAdminService {
                 clubAdmin.setMemberId(memberId);
                 clubAdmin.setFullName(member.getFirstName()+" "+member.getLastName());
                 clubAdmin.setEmail(member.getEmail());
-//                clubAdmin.setClubAdminImage(member.getMemberImage());
+
+                // Encode password
+                BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder(8);
+                String encodedPassword = bCryptPasswordEncoder.encode(clubAdmin.getPassword());
+                clubAdmin.setPassword(encodedPassword);
             }
         }
         return clubAdminRepository.save(clubAdmin);
@@ -150,7 +155,9 @@ public class ClubAdminServiceImpl implements ClubAdminService {
         else {
             ClubAdmin clubAdminToUpdate = optionalClubAdmin.get();
 
-            clubAdminToUpdate.setPassword(clubAdmin.getPassword());
+            BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder(8);
+            String newEncodedPassword = bCryptPasswordEncoder.encode(clubAdmin.getPassword());
+            clubAdminToUpdate.setPassword(newEncodedPassword);
         }
         clubAdminRepository.save(clubAdmin);
         return clubAdmin;
