@@ -220,8 +220,7 @@ const Rotract = () => {
           <div className="text-overlay">
             <h1 className="p-5" style={{ width: "1800px" }}>
               {club.clubVision}
-              <div className="typewriter-text2 mt-4">
-              </div>
+              <div className="typewriter-text2 mt-4"></div>
             </h1>
           </div>
         </div>
@@ -288,99 +287,113 @@ const Rotract = () => {
 
       {/* Project Interface */}
       <section className="pg-container">
-        <header className="pg-header">
-          <h2 className="pg-title">Latest Projects</h2>
-          <div className="pg-title-accent"></div>
-        </header>
+  <header className="pg-header">
+    <h2 className="pg-title">Latest Projects</h2>
+    <div className="pg-title-accent"></div>
+  </header>
 
-        {project.length > 0 ? (
-          <div className="pg-grid">
-            {project.map((project, index) => (
-              <article className="pg-card p-3 shadow" key={index}>
-                <div className="pg-card-media">
-                  <img src="/rocaward1.jpg" alt={project.title} />
-                  <div className="pg-card-overlay">
-                    <span className="pg-view-btn">View Project</span>
-                  </div>
-                </div>
-                <div className="pg-card-body">
-                  <span className="pg-card-date">{project.date}</span>
-                  <h3 className="pg-card-title">{project.projectName}</h3>
-                  <p className="pg-card-desc">{project.description}</p>
+  {project.length > 0 ? (
+    <div className="pg-grid" style={{ 
+      display: 'flex', 
+      flexWrap: 'wrap', 
+      gap: '50px', 
 
-                  <ul className="pg-card-details">
-                    <li className="pg-detail-item">
-                      <div className="pg-detail-icon">📅</div>
-                      <div className="pg-detail-content">
-                        <span className="pg-detail-label">Published</span>
-                        <span className="pg-detail-value">
-                          {project.publishedDate}
-                        </span>
-                      </div>
-                    </li>
-                    <li className="pg-detail-item">
-                      <div className="pg-detail-icon">👤</div>
-                      <div className="pg-detail-content">
-                        <span className="pg-detail-label">Publisher</span>
-                        <span className="pg-detail-value">
-                          {project.publisherName}
-                        </span>
-                      </div>
-                    </li>
-                    <li className="pg-detail-item">
-                      <div className="pg-detail-icon">🗓️</div>
-                      <div className="pg-detail-content">
-                        <span className="pg-detail-label">Event Date</span>
-                        <span className="pg-detail-value">
-                          {project.projectHeldDate}
-                        </span>
-                      </div>
-                    </li>
-                  </ul>
-                </div>
-              </article>
-            ))}
-          </div>
-        ) : (
-          <div className="pg-empty">
-            <div className="pg-empty-illustration">
-              <svg
-                width="120"
-                height="100"
-                viewBox="0 0 120 100"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <rect
-                  x="20"
-                  y="20"
-                  width="80"
-                  height="60"
-                  rx="2"
-                  stroke="#CBD5E0"
-                  strokeWidth="2"
-                  strokeDasharray="4 4"
-                />
-                <path
-                  d="M40 50H80M40 60H70"
-                  stroke="#CBD5E0"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                />
-                <circle
-                  cx="60"
-                  cy="35"
-                  r="8"
-                  stroke="#CBD5E0"
-                  strokeWidth="2"
-                />
-              </svg>
+    }}>
+      {project.map((project, index) => (
+        <article 
+          className="pg-card" 
+          key={index} 
+          style={{ 
+            width: 'calc(25% - 23px)', 
+            minWidth: '280px', 
+            maxWidth: '320px',
+            marginBottom: '10px'
+          }}
+        >
+          <div className="pg-card-media">
+            <img src={project.projectImageUrl} alt={project.title} />
+            <div className="pg-card-overlay">
+              <span className="pg-view-btn">View Project</span>
             </div>
-            <p className="pg-empty-text">No projects found.</p>
-            <p className="pg-empty-hint">Check back later for new projects.</p>
           </div>
-        )}
-      </section>
+          <div className="pg-card-body">
+            <span className="pg-card-date">{project.date}</span>
+            <h3 className="pg-card-title">{project.projectName}</h3>
+            <p className="pg-card-desc">{project.description}</p>
+
+            <ul className="pg-card-details">
+              <li className="pg-detail-item">
+                <div className="pg-detail-icon">📅</div>
+                <div className="pg-detail-content">
+                  <span className="pg-detail-label">Published</span>
+                  <span className="pg-detail-value">
+                    {project.publishedDate}
+                  </span>
+                </div>
+              </li>
+              <li className="pg-detail-item">
+                <div className="pg-detail-icon">👤</div>
+                <div className="pg-detail-content">
+                  <span className="pg-detail-label">Publisher</span>
+                  <span className="pg-detail-value">
+                    {project.publisherName}
+                  </span>
+                </div>
+              </li>
+              <li className="pg-detail-item">
+                <div className="pg-detail-icon">🗓️</div>
+                <div className="pg-detail-content">
+                  <span className="pg-detail-label">Event Date</span>
+                  <span className="pg-detail-value">
+                    {project.projectHeldDate}
+                  </span>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </article>
+      ))}
+    </div>
+  ) : (
+    <div className="pg-empty">
+      <div className="pg-empty-illustration">
+        <svg
+          width="120"
+          height="100"
+          viewBox="0 0 120 100"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <rect
+            x="20"
+            y="20"
+            width="80"
+            height="60"
+            rx="2"
+            stroke="#CBD5E0"
+            strokeWidth="2"
+            strokeDasharray="4 4"
+          />
+          <path
+            d="M40 50H80M40 60H70"
+            stroke="#CBD5E0"
+            strokeWidth="2"
+            strokeLinecap="round"
+          />
+          <circle
+            cx="60"
+            cy="35"
+            r="8"
+            stroke="#CBD5E0"
+            strokeWidth="2"
+          />
+        </svg>
+      </div>
+      <p className="pg-empty-text">No projects found.</p>
+      <p className="pg-empty-hint">Check back later for new projects.</p>
+    </div>
+  )}
+</section>
 
       {/* Report Interface */}
       <div className="report-container animate-on-scroll">
