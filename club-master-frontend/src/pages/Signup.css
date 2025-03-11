@@ -134,3 +134,56 @@
   .rsignup-button:active {
     transform: scale(0.95);
   }
+
+  /* Error message container */
+.error-message {
+  display: flex;
+  align-items: center;
+  margin-top: 5px;
+  color: #ff4d4f; /* Red color for errors */
+  font-size: 14px;
+  animation: fadeIn 0.3s ease-in-out; /* Fade-in animation */
+}
+
+/* Icon styling */
+.error-message i {
+  margin-right: 8px;
+  font-size: 16px;
+}
+
+/* Input field with error */
+.rinput-box.error {
+  border: 1px solid #ff4d4f; /* Red border for invalid fields */
+  animation: shake 0.3s ease-in-out; /* Shake animation */
+}
+
+/* Fade-in animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Shake animation */
+@keyframes shake {
+  0% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-5px);
+  }
+  50% {
+    transform: translateX(5px);
+  }
+  75% {
+    transform: translateX(-5px);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}

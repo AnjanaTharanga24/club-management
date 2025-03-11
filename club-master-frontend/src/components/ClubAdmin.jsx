@@ -43,6 +43,7 @@ const Clubadmin = ({changeView}) => {
         <li className="admin-sidebar-item" onClick={() => changeView('viewEvents')}><FaCalendarAlt className="admin-icon" /> Events</li>
         <li className="admin-sidebar-item" onClick={() => changeView('viewParojects')}><FaEdit className="admin-icon" /> Projects</li>
         <li className="admin-sidebar-item" onClick={() => changeView('viewNews')}><FaNewspaper className="admin-icon" /> News</li>
+        <li className="admin-sidebar-item" onClick={() => changeView('addNews')}><FaNewspaper className="admin-icon" /> Add New News</li>
         <li className="admin-sidebar-item" onClick={() => changeView('viewAwards')}><FaNewspaper className="admin-icon" /> Awards</li>
         <li className="admin-sidebar-item" onClick={handleLogout}><FaCog className="admin-icon" /> Sign Out</li>
       </ul>
