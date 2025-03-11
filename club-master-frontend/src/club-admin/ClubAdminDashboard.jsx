@@ -9,6 +9,7 @@ import ViewClubAdminNews from './ViewClubAdminNews';
 import ViewCLubAdminProjects from './ViewCLubAdminProjects';
 import ViewClubAdminAwards from './ViewClubAdminAwards';
 import ClubAdminProfile from './ClubAdminProfile';
+import AddNews from './AddNews';
 
 export default function ClubAdminDashboard() {
      const [currentView, setCurrentView] = useState("default");
@@ -38,6 +39,8 @@ export default function ClubAdminDashboard() {
             return <ViewClubAdminAwards/>
           case 'viewProfile':
             return <ClubAdminProfile/>
+          case 'addNews':
+            return <AddNews/>
   
 
           default:

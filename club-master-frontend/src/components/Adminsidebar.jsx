@@ -18,6 +18,7 @@ const Adminsidebar = ({ changeView }) => {
       case "Main Admin":
         return (
           <ul className="administrator-submenu">
+            <li onClick={() => changeView('myProfile')}><FaPlus className="submenu-icon" /> My Profile</li>
             <li onClick={() => changeView('createNewAdmin')}><FaPlus className="submenu-icon" /> Create New Admin</li>
             <li onClick={() => changeView('viewAllMainAdmin')}><FaUsers className="submenu-icon" /> View All Main Admins</li>
             {/* <li><FaEdit className="submenu-icon" /> Update Admin Profile</li>
