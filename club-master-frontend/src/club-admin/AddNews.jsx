@@ -7,8 +7,8 @@ export default function AddNews() {
   const clubId = user?.id?.split(':')[0];
   
   const [news, setNews] = useState({
-    title: '',
-    content: '',
+    newsTitle: '',
+    description: '',
     date: new Date().toISOString().split('T')[0]
   });
   
@@ -24,41 +24,47 @@ export default function AddNews() {
     }));
   };
   
- const handleSubmit = async (e) => {
-  e.preventDefault();
-  setLoading(true);
-  setError('');
-  setSuccess(false);
-  
-  try {
-    const clubAdminId = user.id;
-    const token = localStorage.getItem('authToken'); // Adjust based on how you store tokens
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError('');
+    setSuccess(false);
     
-    const response = await axios.post(
-      `http://localhost:7000/api/v1/news/${clubId}/save/${clubAdminId}`,
-      news,
-      {
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}` // Add your auth token here
+    try {
+      const clubAdminId = user.id;
+      const token = localStorage.getItem('authToken');
+      
+      // Map form fields to match backend expectations
+      const newsData = {
+        newsTitle: news.newsTitle,
+        description: news.description,
+        // The date will be set by the backend
+      };
+      
+      const response = await axios.post(
+        `http://localhost:7000/api/v1/news/${clubId}/save/${clubAdminId}`,
+        newsData,
+        {
+          headers: {
+            'Content-Type': 'application/json'
+          }
         }
-      }
-    );
-    
-    console.log('News created:', response.data);
-    setSuccess(true);
-    setNews({
-      title: '',
-      content: '',
-      date: new Date().toISOString().split('T')[0]
-    });
-  } catch (err) {
-    console.error('Error creating news:', err);
-    setError(`Failed to create news: ${err.response?.data?.message || err.message}`);
-  } finally {
-    setLoading(false);
-  }
-};
+      );
+      
+      console.log('News created:', response.data);
+      setSuccess(true);
+      setNews({
+        newsTitle: '',
+        description: '',
+        date: new Date().toISOString().split('T')[0]
+      });
+    } catch (err) {
+      console.error('Error creating news:', err);
+      setError(`Failed to create news: ${err.response?.data?.message || err.message}`);
+    } finally {
+      setLoading(false);
+    }
+  };
   
   return (
     <div className="container">
@@ -69,26 +75,26 @@ export default function AddNews() {
       
       <form onSubmit={handleSubmit}>
         <div className="form-group">
-          <label htmlFor="title">Title</label>
+          <label htmlFor="newsTitle">Title</label>
           <input
             type="text"
             className="form-control"
-            id="title"
-            name="title"
-            value={news.title}
+            id="newsTitle"
+            name="newsTitle"
+            value={news.newsTitle}
             onChange={handleChange}
             required
           />
         </div>
         
         <div className="form-group">
-          <label htmlFor="content">Content</label>
+          <label htmlFor="description">Content</label>
           <textarea
             className="form-control"
-            id="content"
-            name="content"
+            id="description"
+            name="description"
             rows="5"
-            value={news.content}
+            value={news.description}
             onChange={handleChange}
             required
           />
