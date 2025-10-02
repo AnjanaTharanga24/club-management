@@ -43,7 +43,7 @@ public class ClubController {
 
     @PutMapping("/update/{clubId}")
     public Club updateClub(@PathVariable String clubId,
-                           @RequestPart String clubJason,
+                           @RequestPart("club") String clubJason,
                            @RequestPart("clubLogo") MultipartFile newClubLogo,
                            @RequestPart("BackgroundImages") MultipartFile[] newBackgroundImages) throws IOException {
 
