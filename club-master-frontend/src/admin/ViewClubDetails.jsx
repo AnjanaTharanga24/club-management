@@ -85,15 +85,15 @@ export default function ClubDetails({ clubId }) {
           <span className="club-id-text">#{club.clubId}</span>
           <h1 className="club-name">{club.clubName}</h1>
           <div className="club-actions">
-            <button 
-              className="action-button edit-button" 
+            <button
+              className="action-button edit-button"
               onClick={handleUpdate}
               title="Edit club"
             >
               <i className="bi bi-pencil"></i>
             </button>
-            <button 
-              className="action-button delete-button" 
+            <button
+              className="action-button delete-button"
               onClick={handleDelete}
               title="Delete club"
             >
@@ -116,14 +116,14 @@ export default function ClubDetails({ clubId }) {
               </div>
               <div className="info-value">{club.clubAddress}</div>
             </div>
-            
+
             <div className="info-row">
               <div className="info-label">
                 <i className="bi bi-person-badge"></i> Senior Adviser
               </div>
               <div className="info-value">{club.clubSeniorAdviser}</div>
             </div>
-            
+
             <div className="info-row">
               <div className="info-label">
                 <i className="bi bi-person-workspace"></i> Producer
@@ -150,7 +150,11 @@ export default function ClubDetails({ clubId }) {
                 <i className="bi bi-image"></i> Logo
               </div>
               <div className="info-value">
-                <img src={club.clubLogoUrl} alt="Club Logo" className="club-logo" />
+                <img
+                  src={club.clubLogoUrl}
+                  alt="Club Logo"
+                  className="club-logo"
+                />
               </div>
             </div>
           </div>
