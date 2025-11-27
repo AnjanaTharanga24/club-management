@@ -73,7 +73,7 @@ const Signup = () => {
 
       console.log('Registration successful:', response.data);
     } catch (error) {
-      console.error('Registration failed:', error.response?.data || error.message);
+      console.error('Registration failed:', error.message);
 
       // Show error alert
       Swal.fire({
